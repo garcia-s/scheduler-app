@@ -1,0 +1,23 @@
+------------------- Models -------------------
+Users >	
+	name
+	username
+	password
+	p_lvl
+
+configs >
+	operating_hours ?
+
+Service >
+	Name
+	Duration (ms)
+	active (bool)
+	price
+
+Appointment >
+	Date
+	Services Services[]
+	price
+	status (re-schedule, dropped, pending)
+
+-----------------------------------------------
