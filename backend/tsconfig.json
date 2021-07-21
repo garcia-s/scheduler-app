@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "types": [
+            "node",
+            "jest"
+        ],
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "target": "es6",
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "strict": false,
+        "paths": {
+            "*": [
+                "node_modules/*"
+            ]
+        }
+    }
+}
