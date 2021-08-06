@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract class ProviderInterface<T> extends ChangeNotifier {
+abstract class ListInterface<T> extends ChangeNotifier {
   List<T>? list;
   //List<dynamic>? _queue;
 

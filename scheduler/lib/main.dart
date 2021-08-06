@@ -1,5 +1,7 @@
 import 'package:cell_calendar/cell_calendar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scheduler/data/state/providers/connection.dart';
 
 void main() => runApp(const MyApp());
 
@@ -9,10 +11,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: CellCalendar(
-          onCellTapped: (_) => Navigator.of(context).pushNamed('hello'),
+    return ChangeNotifierProvider<ConnectionProvider>(
+      create: (_) => ConnectionProvider(),
+      child: Consumer<ConnectionProvider>(
+        builder: (ctx, provider, _) => MaterialApp(
+          home: Container(
+            color: Colors.red,
+          ),
         ),
       ),
     );
