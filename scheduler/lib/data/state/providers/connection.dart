@@ -3,8 +3,8 @@ import 'package:scheduler/conf/server.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 enum SocketStatus { connected, error, disconnected }
-
 class ConnectionProvider extends ChangeNotifier {
+
   SocketStatus _status = SocketStatus.disconnected;
 
   SocketStatus get status => _status;
@@ -25,6 +25,7 @@ class ConnectionProvider extends ChangeNotifier {
     );
     _client.onConnect((data) {
       _status = SocketStatus.connected;
+      notifyListeners();
     });
     _client.onDisconnect((reason) {
       _status =
