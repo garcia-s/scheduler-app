@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scheduler/data/models/user.dart';
 import 'package:scheduler/data/state/providers/auth.dart';
+import 'package:scheduler/presentation/routes/access/login.dart';
+import 'package:scheduler/presentation/routes/access/recovery.dart';
 
 class AppNavigator extends StatelessWidget {
   const AppNavigator({Key? key}) : super(key: key);
@@ -33,6 +35,13 @@ class _AccessNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MaterialApp(
+      initialRoute: LoginRoute.address,
+      routes: {
+        LoginRoute.address: (_) => const LoginRoute(),
+        RecoveryRoute.address: (_) => const RecoveryRoute(),
+
+      },
+    );
   }
 }
