@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scheduler/conf/themes.dart';
 import 'package:scheduler/data/models/user.dart';
 import 'package:scheduler/data/state/providers/auth.dart';
 import 'package:scheduler/presentation/routes/access/login.dart';
@@ -36,6 +37,9 @@ class _AccessNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      color: Colors.red,
+      themeMode: ThemeMode.dark,
+      theme: ThemeData(colorScheme: lightMode, backgroundColor: Colors.red),
       initialRoute: LoginRoute.address,
       routes: {
         LoginRoute.address: (_) => const LoginRoute(),

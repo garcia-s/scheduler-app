@@ -11,7 +11,6 @@ abstract class ListInterface<T> extends ChangeNotifier {
   // Might need to provide a sort
   void add(T t) {
     //TODO: Replace with a queue, actions can be queued before initializing.
-    //Helpful for websocket or sse architecture where events might come out of order.
     if(list == null ) throw Exception('Cannot add before initializing');
     list!.add(t);
   }
