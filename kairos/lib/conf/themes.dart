@@ -1,33 +1,43 @@
 import 'package:flutter/material.dart';
 
-const lightMode = ColorScheme(
-  brightness: Brightness.light,
-  onBackground: Colors.blue,
-  error: Colors.yellow,
-  onError: Colors.red,
-  secondary: Colors.cyan,
-  surface: Colors.pink,
-  onPrimary: Colors.white,
-  onSecondary: Colors.lightBlue,
-  primaryVariant: Colors.lightGreen,
-  onSurface: Colors.black,
-  primary: Colors.lime,
-  background: Colors.green,
-  secondaryVariant: Colors.purple,
+final ThemeData light = ThemeData(
+  primaryColorDark: Colors.black,
+  scaffoldBackgroundColor: Colors.white,
+  errorColor: Colors.blue,
+  colorScheme: const ColorScheme(
+      primary: Color.fromRGBO(50, 50, 80, 1),
+      primaryVariant: Colors.purple,
+      secondary: Colors.blue,
+      secondaryVariant: Colors.blueAccent,
+      surface: Colors.lightGreen,
+      background: Colors.black,
+      error: Colors.redAccent,
+      onPrimary: Colors.pink,
+      onSecondary: Colors.teal,
+      onSurface: Colors.cyan,
+      onBackground: Colors.indigo,
+      onError: Colors.orange,
+      brightness: Brightness.light),
 );
 
-const darkMode = ColorScheme(
-  brightness: Brightness.light,
-  onBackground: Colors.white,
-  error: Colors.red,
-  onError: Colors.red,
-  secondary: Colors.red,
-  surface: Colors.white,
-  onPrimary: Colors.white,
-  onSecondary: Colors.red,
-  primaryVariant: Colors.green,
-  onSurface: Colors.black,
-  primary: Colors.white,
-  background: Colors.white,
-  secondaryVariant: Colors.purple,
+
+final ThemeData dark = ThemeData(
+  primaryColorDark: Colors.black,
+  scaffoldBackgroundColor: Colors.green,
+  errorColor: Colors.blue,
+  colorScheme: const ColorScheme(
+      primary: Colors.red,
+      primaryVariant: Colors.purple,
+      secondary: Colors.blue,
+      secondaryVariant: Colors.blueAccent,
+      surface: Colors.grey,
+      background: Colors.black,
+      error: Colors.redAccent,
+      onPrimary: Colors.pink,
+      onSecondary: Colors.teal,
+      onSurface: Colors.cyan,
+      onBackground: Colors.indigo,
+      onError: Colors.orange,
+      brightness: Brightness.light),
 );
+

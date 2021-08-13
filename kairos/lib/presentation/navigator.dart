@@ -38,8 +38,10 @@ class _AccessNavigator extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       color: Colors.red,
-      themeMode: ThemeMode.dark,
-      theme: ThemeData(colorScheme: lightMode, backgroundColor: Colors.red),
+
+      themeMode: ThemeMode.light,
+      theme: light,
+      darkTheme: dark,
       initialRoute: LoginRoute.address,
       routes: {
         LoginRoute.address: (_) => const LoginRoute(),
