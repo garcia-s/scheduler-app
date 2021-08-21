@@ -1,10 +1,10 @@
 import isLoginInfo from "../validators/is_login_info";
 import { Server, Socket } from "socket.io"
-import { auth } from "../events";
+
 import { getUserByLoginInfo, userExists } from "../repositories/users";
-import initializeProductModule from "./products/products.module";
 import { User } from "../models/user";
-import initializeTableModule from "./tables/tables.module";
+import { authEvents } from "../events";
+import initializeUsersModule from "./users_module/initialize";
 
 const connectionController: (io: Server, socket: Socket) => void = async (io, socket) => {
 
@@ -13,7 +13,7 @@ const connectionController: (io: Server, socket: Socket) => void = async (io, so
     let lockedtimes = 0;
     let timer: any;
 
-    socket.on(auth.signIn, async (arg: any) => {
+    socket.on(authEvents.signIn, async (arg: any) => {
 
         if (locked) return;
         if (typeof arg != 'object' ||
@@ -25,29 +25,32 @@ const connectionController: (io: Server, socket: Socket) => void = async (io, so
                 locked = true
                 lockedtimes++
                 const time = lockedtimes * 10000;
-                socket.emit(auth.error, { type: 'auth-locked', data: time })
+                socket.emit(authEvents.error, { type: 'auth-locked', data: time })
                 return timer = setTimeout(() => {
                     locked = false;
-                    socket.emit(auth.unlocked);
+                    socket.emit(authEvents.unlocked);
                 }, time)
             }
-            return socket.emit(auth.error, { type: 'auth-error' });
+            return socket.emit(authEvents.error, { type: 'auth-error' });
         }
 
-        const user = await getUserByLoginInfo(arg)
+        const user = await getUserByLoginInfo(arg.username, arg.password)
+        console.log(user)
         if (!user) {
             //TODO:  ADD ATTEMPT TO THE USER IN THE DATABASE AND/OR LOCK HIM
-            return socket.emit(auth.error, 'This is an error string');
+            return socket.emit(authEvents.error, 'This is an error string');
         }
 
         // socket.join(user.id);     Not necessary just yet
         delete user.password
-        socket.emit(auth.current, user)
+        socket.emit(authEvents.current, user)
 
-        // initialize modules for this user.
-        initializeTableModule(socket, user as User);
-        initializeProductModule(socket, user as User);
+        if(user.admin) {
+            initializeUsersModule(socket)
+        } else {
 
+        }
+        
 
     });
 

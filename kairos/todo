@@ -1,15 +1,16 @@
 --------- TODO ---------------
 
-Refactor user datamodel
+
 
 ---------- In progresss ---------
 
+
+---------- Done -----------
+
+Refactor user datamodel
 Delete unnecesary datamodels
 Delete unnecesary providers
 Delete unnecesary repositories
 Delete unnecesary mediators
-
----------- Done -----------
-
-
+Create the application models
 ---------------------------------

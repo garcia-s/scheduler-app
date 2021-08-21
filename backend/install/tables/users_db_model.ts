@@ -13,7 +13,7 @@ export const createUsersTable: () => Promise<void> = async () => {
         "name" character varying(150) NOT NULL,
         password text NOT NULL,
         "root" boolean NOT NULL,
-        "admin" boolean NOT NULL,z
+        "admin" boolean NOT NULL,
         PRIMARY KEY (id)
     )`)
         pool.end();

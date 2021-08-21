@@ -4,7 +4,8 @@ Service
 	per_user_limitation //Parallel limitations for the service per qualified user
 	designated_areas //Space limitations for the service
 	is_time_sensitive: //If is time sensitive it needs a specific timeframe to be executed that cannot be designated by the scheduling user
-	timeframe //If needed this shoul give a duration for the specified service  
+	timeframe //If needed this should give a duration for the specified service
+	isMultitask  //If needed this should be default
 
 // "Geographical" organizational structure of ServiceSpaces.
 ServiceSpaceArea

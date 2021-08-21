@@ -3,8 +3,9 @@ export type User = {
     name: string,
     username: string,
     password: string,
-    tableModuleAccess: 0 | 1 | 2 | 3;
-    productModuleAccess: 0 | 1 | 2 | 3;
+    admin: boolean;
+    root: boolean;
+    services: string[]
 }
 
 

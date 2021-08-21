@@ -1,42 +1,41 @@
 class EventSet {
   // requests
-  final String create;
-  final String modify;
-  final String delete;
-  final String initialize;
+   final String create;
+   final String modify;
+   final String delete;
+   final String initialize;
 
   // server-events
-  final String createdEvent;
-  final String updatedEvent;
-  final String deletedEvent;
+   final String createdEvent;
+   final String updatedEvent;
+   final String deletedEvent;
 
   //Responses
-  final String initialData;
-  final String successCreated;
-  final String successDeleted;
-  final String successModified;
+   final String initialData;
+   final String successCreated;
+   final String successDeleted;
+   final String successModified;
 
   //Errors
-  final String initError;
-  final String errorCreated;
-  final String errorDeleted;
-  final String errorModified;
+   final String initError;
+   final String errorCreated;
+   final String errorDeleted;
+   final String errorModified;
 
-  const EventSet({
-    required this.create,
-    required this.modify,
-    required this.delete,
-    required this.initialize,
-    required this.createdEvent,
-    required this.updatedEvent,
-    required this.deletedEvent,
-    required this.initialData,
-    required this.successCreated,
-    required this.successDeleted,
-    required this.successModified,
-    required this.initError,
-    required this.errorCreated,
-    required this.errorDeleted,
-    required this.errorModified
-  });
+  const EventSet(String prefix)
+      : create = '$prefix:create',
+        modify = '$prefix:modify',
+        delete = '$prefix:delete',
+        initialize = '$prefix:initialize',
+        createdEvent = '$prefix:created-table',
+        updatedEvent = '$prefix:updated-table',
+        deletedEvent = '$prefix:deleted-table',
+        initialData = '$prefix:initial-data',
+        successCreated = '$prefix:success-created',
+        successDeleted = '$prefix:success-deleted',
+        successModified = '$prefix:success-modified',
+        initError = '$prefix:init-error',
+        errorCreated = '$prefix:error-created',
+        errorDeleted = '$prefix:error-deleted',
+        errorModified = '$prefix:error-modified';
 }

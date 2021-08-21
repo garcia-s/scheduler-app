@@ -5,21 +5,20 @@ import { PoolClient } from "pg";
 
 
 
-export const createUser: (params: {
+export const createUser: (
     user: User,
-    client?: PoolClient
-}) => Promise<boolean> = async ({ client, user }) => {
-    client = client ? client : await getClient();
+) => Promise<boolean> = async (user) => {
+    const client = await getClient();
     try {
         const pass = await hash(user.password)
         const response = await client!.query(`INSERT INTO
-        users (id, name, username, password, "tableModuleAccess", "productModuleAccess")
+        users (id, name, username, password, "admin", "root")
         VALUES ($1,$2,$3,$4,$5,$6)`, [
             user.id, user.name,
             user.username,
             pass,
-            user.tableModuleAccess,
-            user.productModuleAccess
+            user.admin,
+            user.root
         ]);
         return response.rowCount === 1;
     } catch (e) {
@@ -49,22 +48,24 @@ export const deleteUserById: (p: {
 
 
 
-export const getUserByLoginInfo: (params: {
+export const getUserByLoginInfo: (
     password: string,
     username: string,
-    client?: PoolClient,
-}) => Promise<User | null> = async ({ password, username, client }) => {
+) => Promise<User | null> = async (username, password) => {
+    const client = await getClient();
     try {
-        client = client ? client : await getClient();
+
         const response = await client!.query
             ('SELECT * FROM users WHERE username = $1 AND password = $2',
                 [username.toLowerCase(), await hash(password)]);
+        response.rows[0].services = [];
         return response.rows[0] ? response.rows[0] as User : null;
     } catch (e) {
         //TODO: LOG TO FILE
+        console.log(e)
         // throw new Error(e);
     } finally {
-        client!.release();
+        client.release();
     }
 }
 

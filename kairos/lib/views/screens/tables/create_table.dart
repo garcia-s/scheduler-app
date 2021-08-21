@@ -12,10 +12,12 @@ class CreateTableScreen extends StatefulWidget {
 }
 
 class _CreateTableScreenState extends State<CreateTableScreen> {
+  
   bool _loading = false;
   bool _active = false;
   String? _name;
   int? _capacity;
+
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {

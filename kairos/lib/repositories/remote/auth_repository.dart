@@ -23,11 +23,12 @@ class AuthRepository {
       //TODO: TYPECHECK THIS SHIT
       _completer.complete(
         User(
-          id: d['id'],
-          name: d['name'],
+          services: (d['services'] as List).isEmpty ? [] : d['services'],
+          admin: d['admin'] ?? false,
+          root: d['root'] ?? false,
           username: d['username'],
-          tableModuleAccess: d['tableModuleAccess'] ?? 4,
-          productModuleAccess: 2,
+          name: d['name'],
+          id: d['id'],
         ),
       );
       _socket.off(AuthEvents.error);

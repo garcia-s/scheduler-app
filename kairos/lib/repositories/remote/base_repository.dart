@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:vortex/helpers/cast.dart';
-import 'package:vortex/models/base_model.dart';
+import 'package:vortex/models/interface.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:vortex/models/events.dart';
 
-class BaseRepository<D extends BaseModel> {
+class BaseRepository<D extends ModelInterface> {
   final io.Socket socket;
   final EventSet eventSet;
   final D Function(Map<String, dynamic>) factory;
@@ -51,7 +51,7 @@ class BaseRepository<D extends BaseModel> {
     return completer.future;
   }
 
-  Future<E> create<E extends BaseModel> (E obj) {
+  Future<E> create<E extends ModelInterface> (E obj) {
     Completer<E> completer = Completer<E>();
 
     return completer.future;

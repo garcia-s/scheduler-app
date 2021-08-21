@@ -6,7 +6,6 @@ import 'package:vortex/state/providers/connection_provider.dart';
 import 'package:vortex/views/screens/login_screen.dart';
 import 'package:vortex/views/screens/main/main_screen.dart';
 import 'package:vortex/views/screens/server_setting.dart';
-import 'package:vortex/views/screens/tables/create_table.dart';
 import 'package:vortex/views/widgets/loading.dart';
 
 late ConfigProvider _cgprovider;
@@ -21,13 +20,6 @@ class RouterMediator {
   }
 
   Route<dynamic> generateRoute(RouteSettings settings) {
-    if (settings.name == CreateTableScreen.route) {
-      return MaterialPageRoute(
-          builder: (_) => _authprovider.user != null &&
-                  _authprovider.user!.tableModuleAccess < 3
-              ? const CreateTableScreen()
-              : const Center(child: Text('unable')));
-    }
     return MaterialPageRoute(builder: _mainBuilder);
   }
 
@@ -39,6 +31,7 @@ class RouterMediator {
     } else if (_connprovider.status == SocketStatus.connecting) {
       return const ModalLoadingScreen();
     } else if (_connprovider.status == SocketStatus.error) {
+      //TODO: CHANGE TO A RECONNECT AND
       return Container(color: Colors.black);
     } else if (_authprovider.user != null) {
       return MainScreen(_authprovider.user!);

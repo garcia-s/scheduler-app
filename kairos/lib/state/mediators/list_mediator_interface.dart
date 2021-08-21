@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vortex/models/base_model.dart';
+import 'package:vortex/models/interface.dart';
 import 'package:vortex/models/events.dart';
-import 'package:vortex/repositories/base_repository.dart';
+import 'package:vortex/repositories/remote/base_repository.dart';
 import 'package:vortex/state/providers/connection_provider.dart';
 import 'package:vortex/state/providers/list_provider_interface.dart';
 
-class ListMediatorInterface<T extends BaseModel> {
+class ListMediatorInterface<T extends ModelInterface> {
   late final ListProviderInterface<T> _provider;
   late final BaseRepository _repo;
   final T Function(Map<String, dynamic>) factory;
@@ -23,7 +23,7 @@ class ListMediatorInterface<T extends BaseModel> {
         factory: factory);
   }
 
-  ListProviderInterface<M> initialize<M extends BaseModel>({
+  ListProviderInterface<M> initialize<M extends ModelInterface>({
     required BuildContext context,
     required EventSet eventSet,
     required M Function(Map<String, dynamic>) instanceFactory,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vortex/models/base_model.dart';
+import 'package:vortex/models/interface.dart';
 
 
-class ListProviderInterface<T extends BaseModel> extends ChangeNotifier {
+class ListProviderInterface<T extends ModelInterface> extends ChangeNotifier {
   
   ListProviderInterface();
   List<T>? _list;

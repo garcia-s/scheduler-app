@@ -16,6 +16,7 @@ class _CustomNavigationState extends State<CustomNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.routes.isEmpty) throw Exception('Cannot build without a route');
     if (widget.routes.length < 2) return Scaffold(body: widget.routes[0].route);
 
     Size size = MediaQuery.of(context).size;
