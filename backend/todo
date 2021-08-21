@@ -1,0 +1,16 @@
+----------------- TODO -------------------
+
+Refactor to a single database api.
+Refactor application to provide a single instance of the database and close the database on server close.
+create the product-category write module.
+create the product-catgory  delete module.
+
+
+------------- IN PROGRESS ----------------
+create the product-category read handler
+create the products getter repository
+creae the categories getter repository
+
+
+
+----------------- DONE -------------------

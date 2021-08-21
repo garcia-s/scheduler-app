@@ -1,43 +1,42 @@
 import 'package:flutter/material.dart';
 
-final ThemeData light = ThemeData(
-  primaryColorDark: Colors.black,
-  scaffoldBackgroundColor: Colors.white,
-  errorColor: Colors.blue,
-  colorScheme: const ColorScheme(
-      primary: Color.fromRGBO(50, 50, 80, 1),
-      primaryVariant: Colors.purple,
-      secondary: Colors.blue,
-      secondaryVariant: Colors.blueAccent,
-      surface: Colors.lightGreen,
-      background: Colors.black,
+class CustomTheme {
+  final lightMode = ThemeData(
+    scaffoldBackgroundColor: Colors.white,
+    colorScheme: const ColorScheme(
+      brightness: Brightness.light,
+      background: Color(0xFFE3E3E3),
+      onBackground: Color(0XFF323232),
+      surface: Colors.white70,
       error: Colors.redAccent,
-      onPrimary: Colors.pink,
-      onSecondary: Colors.teal,
-      onSurface: Colors.cyan,
-      onBackground: Colors.indigo,
-      onError: Colors.orange,
-      brightness: Brightness.light),
-);
-
-
-final ThemeData dark = ThemeData(
-  primaryColorDark: Colors.black,
-  scaffoldBackgroundColor: Colors.green,
-  errorColor: Colors.blue,
-  colorScheme: const ColorScheme(
-      primary: Colors.red,
-      primaryVariant: Colors.purple,
+      primary: Color(0xFF323250),
+      onPrimary: Colors.white,
+      //DUNNO
       secondary: Colors.blue,
-      secondaryVariant: Colors.blueAccent,
-      surface: Colors.grey,
-      background: Colors.black,
-      error: Colors.redAccent,
-      onPrimary: Colors.pink,
-      onSecondary: Colors.teal,
-      onSurface: Colors.cyan,
-      onBackground: Colors.indigo,
-      onError: Colors.orange,
-      brightness: Brightness.light),
-);
+      onError: Colors.red,
+      onSecondary: Colors.red,
+      onSurface: Colors.red,
+      primaryVariant: Colors.white,
+      secondaryVariant: Colors.red,
+    ),
+  );
 
+  final darkMode = ThemeData(
+      scaffoldBackgroundColor: const Color(0xFF232323),
+      colorScheme: const ColorScheme(
+        brightness: Brightness.dark,
+        background: Color(0XFF303030),
+        onBackground: Color(0xFFE3E3E3),
+        surface: Color(0xFF404040),
+        error: Colors.redAccent,
+        primary: Colors.cyan,
+        onPrimary: Colors.white,
+        //DUNNO
+        secondary: Colors.blue,
+        onError: Colors.red,
+        onSecondary: Colors.red,
+        onSurface: Colors.red,
+        primaryVariant: Colors.white,
+        secondaryVariant: Colors.red,
+      ));
+}

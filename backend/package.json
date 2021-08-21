@@ -1,18 +1,28 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
+  "name": "vortex_backend",
+  "version": "0.1.0",
+  "description": "Backend vortex",
   "main": "dist/index.js",
+  "author": "Juan Garcia",
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc",
+    "createuser": "ts-node dev/createuser.ts",
+    "test": "jest",
+    "test i auth": "jest -t 'auth-module'",
+    "test i tables": "jest -t 'tables-module'",
+    "test i orders": "jest -t 'orders-module'",
+    "database-auth": "jest",
+    "start": "node dist/index.js",
+    "devinstall": "ts-node install/install.ts",
+    "install-server": "tsc && node dist/install/install.js",
     "dev": "nodemon index.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "pg": "^8.6.0",
     "socket.io": "^3.1.2",
+    "socket.io-client": "^3.1.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -22,9 +32,10 @@
     "@types/socket.io": "^3.0.2",
     "@types/socket.io-client": "^3.0.0",
     "@types/uuid": "^8.3.0",
+    "@types/winston": "^2.4.4",
     "jest": "^27.0.4",
     "nodemon": "^2.0.7",
-    "socket.io-client": "^3.1.2",
+    "pgmock2": "^2.0.6",
     "ts-jest": "^27.0.3",
     "typescript": "^4.3.4"
   }

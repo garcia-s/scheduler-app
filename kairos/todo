@@ -1,17 +1,15 @@
-Not using Github Kanban
+--------- TODO ---------------
 
--------------------- TODO ---------------------
+Refactor user datamodel
 
-Need a effing logo BTW (Maybe fireheart?)
-Su/Admin panel design.
-Normal user panel design.
+---------- In progresss ---------
 
------------------ in Progress -----------------
+Delete unnecesary datamodels
+Delete unnecesary providers
+Delete unnecesary repositories
+Delete unnecesary mediators
 
-Create connection error/reconnecting screen
-Create the unreachable server screen
-Create the login screen
+---------- Done -----------
 
------------------   DONE  --------------------
 
-rename app to Kairos (greek word for the right or opportune moment) seems adequate for an scheduler app
+---------------------------------

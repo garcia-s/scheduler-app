@@ -1,7 +1,7 @@
 
 import { Server, Socket } from 'socket.io';
 import { createServer } from 'http'
-import connectionController from './core/controllers/connection_controller';
+import connectionController from './core/modules/connection.controller';
 
 const server = createServer();
 const io = new Server(server, {
