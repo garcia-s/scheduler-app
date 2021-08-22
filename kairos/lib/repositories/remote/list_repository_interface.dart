@@ -5,12 +5,12 @@ import 'package:vortex/models/interface.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:vortex/models/events.dart';
 
-class BaseRepository<D extends ModelInterface> {
+class ListRepositoryInterface<D extends ModelInterface> {
   final io.Socket socket;
   final EventSet eventSet;
   final D Function(Map<String, dynamic>) factory;
 
-  BaseRepository({
+  ListRepositoryInterface({
     required this.socket,
     required this.eventSet,
     required this.factory,
@@ -29,6 +29,7 @@ class BaseRepository<D extends ModelInterface> {
     Completer<List<D>> completer = Completer<List<D>>();
     socket.once(eventSet.initialData, (data) {
       socket.off(eventSet.initError);
+      print(data);
       var list = castOrNull<List>(data);
       return list != null
           ? completer.complete(

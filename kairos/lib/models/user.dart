@@ -17,9 +17,12 @@ class User extends ModelInterface {
     required this.admin,
     required this.services,
   });
-  // User.fromJson(Map<String, dynamic> json) {
-  //   this.name = json['name'];
-  //   this.id = json['id'];
 
-  // }
+  User.fromJson(Map<String, dynamic> map)
+      : id = map['id'],
+        name = map['name'],
+        username = map['username'],
+        root = map['root'],
+        admin = map['admin'],
+        services = (map['services'] as List).isEmpty ? [] : map['services'];
 }

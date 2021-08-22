@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vortex/conf/events.dart';
 import 'package:vortex/conf/themes.dart';
+import 'package:vortex/models/user.dart';
 import 'package:vortex/state/mediators/config_mediator.dart';
+import 'package:vortex/state/mediators/list_mediator_interface.dart';
 import 'package:vortex/state/mediators/router_mediator.dart';
 import 'package:vortex/state/providers/connection_provider.dart';
 import 'package:vortex/state/providers/config_provider.dart';
 import 'package:vortex/state/providers/auth_provider.dart';
+import 'package:vortex/state/providers/list_provider_interface.dart';
 
 void main() => runApp(const MyApp());
 
@@ -32,7 +36,18 @@ class MyApp extends StatelessWidget {
             create: (_) => ConnectionProvider(),
           ),
           ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
-         
+          ChangeNotifierProxyProvider<AuthProvider,
+                  ListProviderInterface<User>>(
+              create: (ctx) => ListProviderInterface<User>(),
+              update: (ctx, auth, prov) {
+                if (auth.user != null && auth.user!.admin) {
+                  return ListMediatorInterface<User>(
+                      context: ctx,
+                      eventSet: usersEvents,
+                      factory: (map) => User.fromJson(map)).initialize();
+                }
+                return prov!;
+              }),
         ],
         child: Consumer<ConfigProvider>(
           builder: (ctx, provider, _) => Directionality(
@@ -47,13 +62,14 @@ class MyApp extends StatelessWidget {
                           : ThemeMode.light,
                 ),
                 Positioned(
-                  top: 0,
-                  left: 0,
+                  top: 20,
+                  right: 20,
                   child: ElevatedButton(
-                      child: const Text('mode'),
-                      onPressed: () {
-                        provider.updateMode(!provider.config!.darkMode);
-                      }),
+                    child: const Text('mode'),
+                    onPressed: () {
+                      provider.updateMode(!provider.config!.darkMode);
+                    },
+                  ),
                 )
               ],
             ),

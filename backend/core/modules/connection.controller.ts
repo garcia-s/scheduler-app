@@ -18,7 +18,7 @@ const connectionController: (io: Server, socket: Socket) => void = async (io, so
         if (locked) return;
         if (typeof arg != 'object' ||
             !isLoginInfo(arg.password, arg.username) ||
-            !(await userExists({ username: arg.username }))) {
+            !(await userExists(arg.username))) {
             tries++
 
             if (tries > 3) {
@@ -35,7 +35,6 @@ const connectionController: (io: Server, socket: Socket) => void = async (io, so
         }
 
         const user = await getUserByLoginInfo(arg.username, arg.password)
-        console.log(user)
         if (!user) {
             //TODO:  ADD ATTEMPT TO THE USER IN THE DATABASE AND/OR LOCK HIM
             return socket.emit(authEvents.error, 'This is an error string');
@@ -45,12 +44,12 @@ const connectionController: (io: Server, socket: Socket) => void = async (io, so
         delete user.password
         socket.emit(authEvents.current, user)
 
-        if(user.admin) {
+        if (user.admin) {
             initializeUsersModule(socket)
         } else {
 
         }
-        
+
 
     });
 

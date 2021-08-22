@@ -2,43 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vortex/models/interface.dart';
 import 'package:vortex/models/events.dart';
-import 'package:vortex/repositories/remote/base_repository.dart';
+import 'package:vortex/repositories/remote/list_repository_interface.dart';
 import 'package:vortex/state/providers/connection_provider.dart';
 import 'package:vortex/state/providers/list_provider_interface.dart';
 
 class ListMediatorInterface<T extends ModelInterface> {
-  late final ListProviderInterface<T> _provider;
-  late final BaseRepository _repo;
+  late final ListRepositoryInterface<T> _repo;
+  final EventSet _eventSet;
   final T Function(Map<String, dynamic>) factory;
+  final BuildContext _context;
 
   ListMediatorInterface({
     required BuildContext context,
     required EventSet eventSet,
     required this.factory,
-  }) {
-    _provider = Provider.of<ListProviderInterface<T>>(context, listen: false);
-    _repo = BaseRepository<T>(
-        socket: Provider.of<ConnectionProvider>(context, listen: false).socket!,
-        eventSet: eventSet,
-        factory: factory);
-  }
+  })  : _eventSet = eventSet,
+        _context = context,
+        _repo = ListRepositoryInterface<T>(
+            socket:
+                Provider.of<ConnectionProvider>(context, listen: false).socket!,
+            eventSet: eventSet,
+            factory: factory);
 
-  ListProviderInterface<M> initialize<M extends ModelInterface>({
-    required BuildContext context,
-    required EventSet eventSet,
-    required M Function(Map<String, dynamic>) instanceFactory,
-  }) {
-    ListProviderInterface<M> provider = ListProviderInterface<M>();
-    BaseRepository<M> repo = BaseRepository<M>(
-        socket: Provider.of<ConnectionProvider>(context, listen: false).socket!,
-        eventSet: eventSet,
-        factory: instanceFactory);
+  ListProviderInterface<T> initialize() {
+    ListProviderInterface<T> provider = ListProviderInterface();
+    _repo.onDeleted(provider.delete);
+    _repo.onCreated(provider.add);
+    _repo.onUpdated(provider.update);
 
-    repo.onDeleted(provider.delete);
-    repo.onCreated(provider.add);
-    repo.onUpdated(provider.update);
-
-    repo.initialize().then((List<M>? list) {
+    _repo.initialize().then((List<T>? list) {
       list != null ? provider.init(list) : null;
     }).catchError((e) {
       //LOG TO FILE
@@ -55,6 +47,8 @@ class ListMediatorInterface<T extends ModelInterface> {
 
   Future<bool> delete(String id) async {
     try {
+      var _provider =
+          Provider.of<ListProviderInterface<T>>(_context, listen: false);
       await _repo.delete(id);
       _provider.delete(id);
       return true;
@@ -66,6 +60,8 @@ class ListMediatorInterface<T extends ModelInterface> {
 
   Future<bool> create(T t) async {
     try {
+      var _provider =
+          Provider.of<ListProviderInterface<T>>(_context, listen: false);
       T _new = await _repo.create(t);
       _provider.add(_new);
       return true;

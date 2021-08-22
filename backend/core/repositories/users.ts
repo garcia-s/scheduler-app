@@ -88,22 +88,20 @@ export const getUserById: (
 
 
 export const userExists: (
-    p: {
-        client?: PoolClient,
-        username: string
-    }) => Promise<boolean> = async ({ client, username }) => {
-        client = client ? client : await getClient();
-        try {
+    username: string
+) => Promise<boolean> = async (username) => {
+    const client = await getClient();
+    try {
 
-            const response = await client!.query(
-                'SELECT * FROM users WHERE username = $1', [username]);
-            return response.rows[0] != null;
-        } catch (e) {
-            // throw new Error(e);
-        } finally {
-            client.release();
-        }
+        const response = await client!.query(
+            'SELECT * FROM users WHERE username = $1', [username]);
+        return response.rows[0] != null;
+    } catch (e) {
+        // throw new Error(e);
+    } finally {
+        client.release();
     }
+}
 
 // export const changePassword: (params: {
 
@@ -120,5 +118,21 @@ export const userExists: (
 // }
 
 
+export const getAllUsers: () => Promise<User[]> = async () => {
+    const client = await getClient();
+    try {
 
-
+        const response = await client.query(
+            'SELECT * FROM users');
+        const rows: User[] = response.rows.map((e) => {
+            delete e.password;
+            e.services = []
+            return e as User
+        })
+        return rows
+    } catch (e) {
+        // throw new Error(e);
+    } finally {
+        client.release();
+    }
+}

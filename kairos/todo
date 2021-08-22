@@ -1,8 +1,8 @@
 --------- TODO ---------------
+Implement custom three way handshake to overcome 
+the limitations of TLS in local enviroment
 
-
-
----------- In progresss ---------
+---------- In progresss --------- 
 
 
 ---------- Done -----------
