@@ -8,7 +8,7 @@ class ServiceListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GenericSearchableEditableList<Service>(
-      list: [],
+      list: const [],
       render: (user) => Container(),
       search: (u, _) => true,
     );

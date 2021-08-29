@@ -2,7 +2,7 @@ import 'package:vortex/models/user.dart';
 import 'package:vortex/views/screens/main/custom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:vortex/views/screens/main/models/custom_navigation_route.dart';
-import 'package:vortex/views/screens/main/service_list/services_list_screen.dart';
+import 'package:vortex/views/screens/main/service_list/service_list_screen.dart';
 import 'package:vortex/views/screens/main/user_list/user_list_screen.dart';
 
 class MainScreen extends StatelessWidget {

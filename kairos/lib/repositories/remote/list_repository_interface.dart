@@ -29,7 +29,7 @@ class ListRepositoryInterface<D extends ModelInterface> {
     Completer<List<D>> completer = Completer<List<D>>();
     socket.once(eventSet.initialData, (data) {
       socket.off(eventSet.initError);
-      print(data);
+
       var list = castOrNull<List>(data);
       return list != null
           ? completer.complete(

@@ -1,8 +1,7 @@
 --------- TODO ---------------
-Implement custom three way handshake to overcome 
-the limitations of TLS in local enviroment
 
 ---------- In progresss --------- 
+
 
 
 ---------- Done -----------
@@ -13,4 +12,16 @@ Delete unnecesary providers
 Delete unnecesary repositories
 Delete unnecesary mediators
 Create the application models
+
 ---------------------------------
+
+
+------------ Ideas --------------
+
+Implement custom three (or 4) way handshake to overcome 
+the limitations of TLS in local enviroment (
+    Initialize de connection
+    send public key to the client
+    send symmetric key to the server
+    acknowledge symmetric key [based on criteria?]
+)
