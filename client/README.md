@@ -1,4 +1,4 @@
-# client
+# admin
 
 A new Flutter project.
 

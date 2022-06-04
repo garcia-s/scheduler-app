@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "client")
-set(APPLICATION_ID "com.example.client")
+set(BINARY_NAME "admin")
+set(APPLICATION_ID "com.example.admin")
 
 cmake_policy(SET CMP0063 NEW)
 

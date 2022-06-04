@@ -1,23 +1,14 @@
-import { TransportServer } from "./core/infrastructure/transport/transport_impl";
-
-const server = new TransportServer({
-  port: 4000,
-  callback: () => console.log("Running in port 4000"),
+import { TransportServer } from "ts-transport";
+import express from "express";
+import { createServer } from "http";
+import { PORT } from "./core/conf";
+const app = express();
+const server = createServer(app);
+const transport = new TransportServer({
+  server: server,
 });
 
-server.onConnect((socket) => {
-  socket.on("chat", () => {
-    socket.join("chat");
-    socket.emit("welcome", "welcome to the room");
-    const messageBroadcaster = (data: any) => {
-      console.log("message is here");
-      socket.emit("sent", "your message was sent");
-      socket.broadcast("message", data);
-    };
-    socket.on("chat-message", messageBroadcaster);
-    socket.on("leave-chat", () => {
-      socket.leave("chat");
-      socket.off("message", messageBroadcaster);
-    });
-  });
-});
+transport.onConnect((client) => {});
+// USER ENTITY
+
+server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
