@@ -1,1 +1,1 @@
-export default abstract class Failure<T> {}
+export default abstract class Failure {}

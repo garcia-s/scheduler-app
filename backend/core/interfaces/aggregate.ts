@@ -6,8 +6,11 @@ import { DomainEventEmitter } from "../domain/events/domain_event_emitter";
 export default abstract class AggregateRoot<T> extends Entity<T> {
   private _domainEvents: IDomainEvent[] = [];
 
-  get id(): UniqueEntityID {
-    return this._id;
+  protected _params: T;
+
+  protected constructor(params: T, id?: UniqueEntityID) {
+    super(params, id);
+    this._params = params;
   }
 
   get domainEvents(): IDomainEvent[] {

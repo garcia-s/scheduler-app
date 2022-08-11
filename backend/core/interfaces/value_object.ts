@@ -8,8 +8,4 @@ export default abstract class ValueObject<T> {
   constructor(value: T) {
     this._value = value;
   }
-
-  equals(id: ValueObject<T>): boolean {
-    return this._value === id.value;
-  }
 }

@@ -1,3 +1,0 @@
-//Clients
-//AdministrativeUsers
-//Appointment

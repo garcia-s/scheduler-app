@@ -1,6 +1,7 @@
-import AggregateRoot from "../../interfaces/aggregate";
+import Aggregate from "../../interfaces/aggregate";
 import { IDomainEvent } from "./domain_event";
 import UniqueEntityID from "../value_objects/unique_entity_id";
+import { Entity } from "../../interfaces/entity";
 
 class HashMap<T> implements Object {
   [key: PropertyKey]: T;
@@ -10,7 +11,7 @@ type DomainEventHandler<> = (event: IDomainEvent) => void;
 
 export class DomainEventEmitter {
   private static handlersMap: HashMap<DomainEventHandler[]> = {};
-  private static markedAggregates: AggregateRoot<any>[] = [];
+  private static markedAggregates: Aggregate<any>[] = [];
 
   /**
    * @method markAggregateForDispatch
@@ -20,7 +21,7 @@ export class DomainEventEmitter {
    * the unit of work.
    */
 
-  public static markAggregateForDispatch(aggregate: AggregateRoot<any>): void {
+  public static markAggregateForDispatch(aggregate: Aggregate<any>): void {
     const aggregateFound = this.findMarkedAggregateByID(aggregate.id);
 
     if (!aggregateFound) {
@@ -35,7 +36,7 @@ export class DomainEventEmitter {
    * @desc Call all of the handlers for any domain events on this aggregate.
    */
 
-  private static dispatchAggregateEvents(aggregate: AggregateRoot<any>): void {
+  private static dispatchAggregateEvents(aggregate: Aggregate<any>): void {
     aggregate.domainEvents.forEach((event: IDomainEvent) =>
       this.dispatch(event)
     );
@@ -48,7 +49,7 @@ export class DomainEventEmitter {
    */
 
   private static removeAggregateFromMarkedDispatchList(
-    aggregate: AggregateRoot<any>
+    aggregate: Aggregate<any>
   ): void {
     const index = this.markedAggregates.findIndex((a) => a.equals(aggregate));
 
@@ -63,8 +64,8 @@ export class DomainEventEmitter {
 
   private static findMarkedAggregateByID(
     id: UniqueEntityID
-  ): AggregateRoot<any> | null {
-    let found: AggregateRoot<any> | null = null;
+  ): Aggregate<any> | null {
+    let found: Aggregate<any> | null = null;
     for (let aggregate of this.markedAggregates) {
       if (aggregate.id.equals(id)) {
         found = aggregate;

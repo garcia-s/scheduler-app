@@ -1,15 +1,20 @@
-import { Err, Ok, Result } from "ts-results";
+import { Result } from "ts-results";
+import { UnimplementedError } from "../../errors/general";
 import Failure from "../../interfaces/failure";
 import ValueObject from "../../interfaces/value_object";
 
-export class FullNameValidationFailure extends Failure<FullName> {}
+export class FullNameValidationFailure extends Failure {}
 
-class FullName extends ValueObject<string> {
+export class FullName extends ValueObject<string> {
   private constructor(value: string) {
     super(value);
   }
 
-  public static create(value: string): Result<FullName, Failure<FullName>> {
-    return Err(new FullNameValidationFailure());
+  public static create(value: string): Result<FullName, Failure> {
+    throw new UnimplementedError();
+  }
+
+  public equals(): boolean {
+    throw new UnimplementedError();
   }
 }
