@@ -5,6 +5,7 @@ import UserPolicyModel from "../modules/auth/application/models/user_policy";
 
 (async () => {
   try {
+    UserModel.sync()
   } catch (e) {
     console.log(e);
   }

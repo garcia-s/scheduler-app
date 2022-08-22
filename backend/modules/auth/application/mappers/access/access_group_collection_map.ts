@@ -1,5 +1,5 @@
-import { AccessGroup } from "../../domain/entities/access/access_group";
-import AccessGroupDTO from "../dto/access_role_dto";
+import { AccessGroup } from "../../../domain/entities/access/access_group";
+import AccessGroupDTO from "../../dto/access/access_role_dto";
 import { AccessPolicyCollectionMap } from "./access_policy_collection_map";
 
 export abstract class AccessGroupCollectionMap {

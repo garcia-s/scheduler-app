@@ -8,11 +8,7 @@ export interface IAccessGroupAggregateParams {
   _users: AccessUser[];
 }
 
-export class AccessGroupAggregate extends Aggregate<IAccessGroupAggregateParams> {
-  
-  constructor(params: IAccessGroupAggregateParams, id: UniqueEntityID) {
-    super(params, id);
-  }
+export class AccessGroupAggregate extends Aggregate<AccessGroup> {
 
   addRolePolicy() {
     throw new UnimplementedError();

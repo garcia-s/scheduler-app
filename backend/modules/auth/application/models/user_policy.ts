@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import { sequelizeConnection } from "../../../../core/conf";
+import { sequelizeConnection } from "../../../../conf";
 import ResourceModel from "./resource_model";
 import ResourceTypeModel from "./resource_type_model";
 import UserModel from "./user_model";

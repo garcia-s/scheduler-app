@@ -1,13 +1,11 @@
 import { IDomainEvent } from "../../../../../core/domain/events/domain_event";
 import UniqueEntityID from "../../../../../core/domain/value_objects/unique_entity_id";
-import { AuthenticationUserAggregate } from "../../agregates/authentication/authentication_user_aggregate";
-
 import { AuthenticationUser } from "../../entities/authentication/authentication_user";
 
-export default class CreatedAuthenticatedUser extends IDomainEvent {
-  private _user: AuthenticationUserAggregate;
+export default class CreatedAuthenticationUser extends IDomainEvent {
+  private _user: AuthenticationUser;
 
-  constructor(user: AuthenticationUserAggregate) {
+  constructor(user: AuthenticationUser) {
     super();
     this._user = user;
   }

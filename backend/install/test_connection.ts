@@ -1,4 +1,4 @@
-import { sequelizeConnection } from "../core/conf";
+import { sequelizeConnection } from "../conf";
 
 (async () => {
   try {

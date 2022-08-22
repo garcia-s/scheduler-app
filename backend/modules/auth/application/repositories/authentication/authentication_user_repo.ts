@@ -3,11 +3,12 @@ import UniqueEntityID from "../../../../../core/domain/value_objects/unique_enti
 import Failure from "../../../../../core/interfaces/failure";
 import { EmailAuthenticationCredentials } from "../../../domain/value_objects/authentication_credentials";
 import { AuthenticationUserAggregate } from "../../../domain/agregates/authentication/authentication_user_aggregate";
+import { EmptyValue } from "../../../../../core/types";
 
 export interface IAuthenticationUserRepo {
   save(
     user: AuthenticationUserAggregate
-  ): Promise<Result<null, IAuthenticationUserRepoFailure>>;
+  ): Promise<Result<EmptyValue, IAuthenticationUserRepoFailure>>;
 
   getUserByEmailCredentials(
     email: EmailAuthenticationCredentials
@@ -20,6 +21,11 @@ export interface IAuthenticationUserRepo {
   ): Promise<
     Result<AuthenticationUserAggregate, IAuthenticationUserRepoFailure>
   >;
+  
 }
 
 export abstract class IAuthenticationUserRepoFailure extends Failure {}
+
+export class AuthRepoDatabaseWriteFailure extends IAuthenticationUserRepoFailure {}
+export class AuthRepoEmailAlreadyInUseFailure extends IAuthenticationUserRepoFailure {}
+export class AuthRepoUserNotFound extends IAuthenticationUserRepoFailure {}

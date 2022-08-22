@@ -1,3 +1,4 @@
+
 import { Err, Ok, Result } from "ts-results";
 import { UnimplementedError } from "../../errors/general";
 import Failure from "../../interfaces/failure";

@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize/types";
-import { sequelizeConnection } from "../../../../core/conf";
+import { sequelizeConnection } from "../../../../conf";
 
 export default class UserRole extends Model {}
 

@@ -1,6 +1,6 @@
 import { Result } from "ts-results";
 import { EmailAddress } from "../../../../core/domain/value_objects/email";
-import { PasswordHash } from "../../../../core/domain/value_objects/password_hash";
+import { PasswordHash } from "./password_hash";
 import { UnimplementedError } from "../../../../core/errors/general";
 import Failure from "../../../../core/interfaces/failure";
 import ValueObject from "../../../../core/interfaces/value_object";

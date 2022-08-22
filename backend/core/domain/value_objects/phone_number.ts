@@ -1,3 +1,4 @@
+
 import { Err, Result } from "ts-results";
 import { UnimplementedError } from "../../errors/general";
 import Failure from "../../interfaces/failure";
@@ -13,7 +14,7 @@ export class PhoneNumber extends ValueObject<string> {
   public static create(
     value: string
   ): Result<PhoneNumber, PhoneValidationFailure> {
-    return Err(new PhoneValidationFailure());
+    return Err (new PhoneValidationFailure());
   }
 
   equals(): boolean {

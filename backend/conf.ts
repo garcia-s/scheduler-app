@@ -15,7 +15,7 @@ const databaseConnection: {
   process.env.NODE_ENV !== "production"
     ? {
         database: "scheduler_db",
-        username: "schedule_user",
+        username: "scheduler_user",
         password: "perono",
         host: "127.0.0.1",
         dialect: "postgres",

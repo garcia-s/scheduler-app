@@ -1,8 +1,7 @@
 import ValueObject from "../../interfaces/value_object";
-import { Err, Ok, Result } from "ts-results";
 import Failure from "../../interfaces/failure";
 import { UnimplementedError } from "../../errors/general";
-
+import { Err, Ok, Result } from "ts-results";
 export class UsernameValidationFailure extends Failure {}
 
 export class Username extends ValueObject<String> {

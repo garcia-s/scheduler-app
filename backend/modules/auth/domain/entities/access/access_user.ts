@@ -12,11 +12,11 @@ export interface IAccessUserParams {
 }
 
 export class AccessUser extends Entity<IAccessUserParams> {
-  private constructor(params: IAccessUserParams, id: UniqueEntityID) {
+  private constructor(params: IAccessUserParams, id?: UniqueEntityID) {
     super(params, id);
   }
 
-  public static create(): Result<AccessUser, Error> {
+  public static create(params: IAccessUserParams): Result<AccessUser, Error> {
     throw new UnimplementedError();
   }
 

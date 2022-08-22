@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import { sequelizeConnection } from "../../../../core/conf";
+import { sequelizeConnection } from "../../../../conf";
 import ResourceTypeModel from "./resource_type_model";
 
 export default class ResourceModel extends Model {}

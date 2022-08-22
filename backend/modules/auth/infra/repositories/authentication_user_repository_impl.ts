@@ -6,33 +6,47 @@ import Failure from "../../../../core/interfaces/failure";
 import { AuthenticationUserAggregate } from "../../domain/agregates/authentication/authentication_user_aggregate";
 
 import {
+  AuthRepoDatabaseWriteFailure,
+  AuthRepoEmailAlreadyInUseFailure,
+  AuthRepoUserNotFound,
   IAuthenticationUserRepo,
   IAuthenticationUserRepoFailure,
 } from "../../application/repositories/authentication/authentication_user_repo";
 import UserModel from "../../application/models/user_model";
-
-export class DatabaseUserCreationFailure extends IAuthenticationUserRepoFailure {}
+import { EmptyValue } from "../../../../core/types";
+import { EmailAuthenticationCredentials } from "../../domain/value_objects/authentication_credentials";
 
 export class AuthenticationUserRepository implements IAuthenticationUserRepo {
   async save(
     user: AuthenticationUserAggregate
-  ): Promise<Result<null, IAuthenticationUserRepoFailure>> {
+  ): Promise<Result<EmptyValue, IAuthenticationUserRepoFailure>> {
     try {
-      await UserModel.build({
+      const exists = await UserModel.findOne({
+        where: { email: user.email.value },
+      });
+      if (exists) return Err(new AuthRepoEmailAlreadyInUseFailure());
+
+      const newUser = UserModel.build({
         id: user.id.value,
         email: user.email.value,
         password: user.password.value,
       });
+
+      await newUser.save();
       DomainEventEmitter.dispatchEventsForAggregate(user.id);
-      return Ok(null);
+      return Ok(EmptyValue);
     } catch (e) {
-      return Err(new DatabaseUserCreationFailure());
+      return Err(new AuthRepoDatabaseWriteFailure());
     }
   }
-  getUserByEmailCredentials(): Promise<
+
+  async getUserByEmailCredentials(
+    credentials: EmailAuthenticationCredentials
+  ): Promise<
     Result<AuthenticationUserAggregate, IAuthenticationUserRepoFailure>
   > {
-    throw new UnimplementedError();
+    const userOrNull =await UserModel.findOne({where: {email: credentials.email.value}});
+    if(!userOrNull) return Err(new AuthRepoUserNotFound());
   }
 
   getUserById(
