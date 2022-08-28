@@ -3,9 +3,8 @@ import { UnimplementedError } from "../../../../core/errors/general";
 import Failure from "../../../../core/interfaces/failure";
 import crypto from "crypto";
 import ValueObject from "../../../../core/interfaces/value_object";
-import Config from "../../conf";
+import { passwordSalt } from "../../../../conf";
 import { Err, Ok, Result } from "ts-results";
-
 
 export abstract class IPasswordHashFailure extends Failure {}
 export class PasswordValidationFailure extends IPasswordHashFailure {}
@@ -20,9 +19,7 @@ export class PasswordHash extends ValueObject<string> {
     value: string
   ): Result<PasswordHash, IPasswordHashFailure> {
     try {
-      const hash = crypto
-        .scryptSync(value, Config.passwordSalt, 256)
-        .toString("hex");
+      const hash = crypto.scryptSync(value, passwordSalt, 256).toString("hex");
 
       return Ok(new PasswordHash(hash));
     } catch (e) {
@@ -34,6 +31,6 @@ export class PasswordHash extends ValueObject<string> {
   }
 
   equals(hash: PasswordHash): boolean {
-    return this.value === hash.value
+    return this.value === hash.value;
   }
 }
