@@ -1,21 +1,10 @@
-import { DataTypes, Model } from "sequelize";
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryColumn,
-} from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 
 import AccessControlPolicyModel from "./access_control_policy_model";
 import AccessControlUserModel from "./access_control_user_model";
 
-
-@Entity('access_group')
+@Entity("access_group")
 export default class AccessControlGroupModel extends BaseEntity {
-
   @PrimaryColumn({ type: "uuid" })
   id: string;
 
@@ -24,6 +13,5 @@ export default class AccessControlGroupModel extends BaseEntity {
 
   @OneToMany(() => AccessControlPolicyModel, (policy) => policy.group)
   policies: AccessControlPolicyModel[];
-  
   users: AccessControlUserModel[];
 }

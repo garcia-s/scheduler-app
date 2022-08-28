@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:client/application/transport/interface.dart';
+import './interface.dart';
 
 class TransportListener {
   final String event;

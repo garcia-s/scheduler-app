@@ -62,16 +62,16 @@ export class AccessControlUserRepository extends IAccessControlUserRepositoryFai
   async getUserById(
     id: UniqueEntityID
   ): Promise<Result<AccessControlUserAggregate, AccessControlUserNotFound>> {
-    console.log(id.value);
     const userModel = await AccessControlUserModel.findOne({
       where: { id: id.value },
       relationLoadStrategy: 'query',
       relations: {
-        groups: true
+        groups: {
+          policies: true,
+        }
       }
     });
     if (userModel == null) return Err(new AccessControlUserNotFound());
-    console.log(userModel);
     return Ok(AccessControlUserMap.fromModelToAggregate(userModel));
   }
 }

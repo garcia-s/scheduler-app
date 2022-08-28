@@ -48,10 +48,10 @@ export default abstract class LoginWithEmailCredentialsController {
       });
     // start the session in the socket data
     client.data = authenticatedUserOrfailure.val;
-
+    console.log(client.data)
     return client.emit(userEvents.login.response, {
       code: 200,
-      data: authenticatedUserOrfailure.val,
+      data: accessControUserOrFailure.val,
     });
   }
 }

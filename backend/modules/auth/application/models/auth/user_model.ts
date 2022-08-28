@@ -1,4 +1,3 @@
-import { DataTypes, Model } from "sequelize";
 import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity('auth_user')
