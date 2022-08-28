@@ -27,11 +27,16 @@ export class AuthenticateUserWithEmailCredentials {
       return Err(new AuthCredentialsValidationFailure());
 
     const authenticationUserOrFailure =
-      await this._authenticationUserRepository.getUserByEmailCredentials(
-        credentialsOrFailure.val
+      await this._authenticationUserRepository.getUserByEmail(
+        credentialsOrFailure.val.email.value
       );
 
-    if (authenticationUserOrFailure.err)
+    if (
+      authenticationUserOrFailure.err ||
+      !authenticationUserOrFailure.val.password.equals(
+        credentialsOrFailure.val.password
+      )
+    )
       return Err(new AuthCredentialsUserNotFoundFailure());
 
     return Ok(

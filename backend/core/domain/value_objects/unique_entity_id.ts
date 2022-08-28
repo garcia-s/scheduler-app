@@ -5,7 +5,7 @@ export default class UniqueEntityID extends ValueObject<string> {
   constructor(value?: string) {
     super(value ?? uuid());
   }
-
+  
   equals(value: UniqueEntityID): boolean {
     return value.value === this.value;
   }

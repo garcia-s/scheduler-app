@@ -19,6 +19,12 @@ export class EmailAddress extends ValueObject<string> {
     return Ok(new EmailAddress(email.toLowerCase()));
   }
 
+  public static reconstitute(
+    email: string
+  ):EmailAddress {
+    return new EmailAddress(email);
+  }
+
   equals(): boolean {
     throw new UnimplementedError();
   }

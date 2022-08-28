@@ -4,40 +4,52 @@ import UniqueEntityID from "../../../../../core/domain/value_objects/unique_enti
 import { UnimplementedError } from "../../../../../core/errors/general";
 import Aggregate from "../../../../../core/interfaces/aggregate";
 import Failure from "../../../../../core/interfaces/failure";
-import { AccessPolicy } from "../../entities/access/access_policy";
-import { AccessGroup } from "../../entities/access/access_group";
-import { AccessUser, IAccessUserParams } from "../../entities/access/access_user";
-import { AddedUserPolicy } from "../../events/access/added_user_policy";
-import { DeletedUserPolicy } from "../../events/access/deleted_user_policy";
+import { AccessControlPolicyEntity } from "../../entities/access/access_control_policy";
+import { AccessControlGroupEntity } from "../../entities/access/access_control_group";
+import {
+  AccessControlUserEntity,
+  IAccessControlUserParams,
+} from "../../entities/access/access_control_user";
+import AddedGroupsToUserEvent from "../../events/access/added_group_to_user_event";
 
-export class AccessUserAggregate extends Aggregate<AccessUser>{
-
-  private constructor(root: AccessUser) {
+export class AccessControlUserAggregate extends Aggregate<AccessControlUserEntity> {
+  private constructor(root: AccessControlUserEntity) {
     super(root);
   }
 
+  public get username() : string {
+    return this.root.username
+  }
+
+  public get groups(): AccessControlGroupEntity[] {
+    return this.root.groups;
+  }
+  
   // Creation factory
-  public static create(rootParams: IAccessUserParams): Result<AccessUserAggregate, IAccessUserAggregateFailure> {
-    const rootOrFailure = AccessUser.create(rootParams)
-    if(rootOrFailure.err) return Err(new InvalidAccesUserRootEntityFailure())
-    return Ok(new AccessUserAggregate(rootOrFailure.val));
+  public static create(id: UniqueEntityID, username: string): AccessControlUserAggregate {
+    const root = AccessControlUserEntity.create(id, username);
+    return new AccessControlUserAggregate(root);
   }
 
-  public addUserPolicy(policy: AccessPolicy) {
-    this.addUserPolicy(policy);
-    this.addDomainEvent(new AddedUserPolicy(this.root.id, policy));
+  public static reconstitute(
+    id: UniqueEntityID,
+    params: IAccessControlUserParams
+  ): AccessControlUserAggregate {
+    const root = AccessControlUserEntity.reconstitute(id, params);
+    return new AccessControlUserAggregate(root);
   }
 
-  public deleteUserPolicy(policyId: UniqueEntityID) {
-    this.deleteUserPolicy(policyId);
-    this.addDomainEvent(new DeletedUserPolicy(this.root.id, policyId));
+  public addGroups(groups: AccessControlGroupEntity[]): void {
+    this.root.addGroups(groups);
+    this.addDomainEvent(
+      new AddedGroupsToUserEvent(this.root.id, this.root.groups)
+    );
   }
 }
-
 
 // -------------------- Failures ---------------------
 
 // Interface
-export abstract class IAccessUserAggregateFailure extends Failure {}
+export abstract class IAccessControlUserAggregateFailure extends Failure {}
 
-export class InvalidAccesUserRootEntityFailure extends IAccessUserAggregateFailure {}
+export class InvalidAccesUserRootEntityFailure extends IAccessControlUserAggregateFailure {}

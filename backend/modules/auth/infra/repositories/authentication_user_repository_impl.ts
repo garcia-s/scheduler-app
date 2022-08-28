@@ -2,7 +2,6 @@ import { Err, Ok, Result } from "ts-results";
 import { DomainEventEmitter } from "../../../../core/domain/events/domain_event_emitter";
 import UniqueEntityID from "../../../../core/domain/value_objects/unique_entity_id";
 import { UnimplementedError } from "../../../../core/errors/general";
-import Failure from "../../../../core/interfaces/failure";
 import { AuthenticationUserAggregate } from "../../domain/agregates/authentication/authentication_user_aggregate";
 
 import {
@@ -12,26 +11,18 @@ import {
   IAuthenticationUserRepo,
   IAuthenticationUserRepoFailure,
 } from "../../application/repositories/authentication/authentication_user_repo";
-import UserModel from "../../application/models/user_model";
+import UserModel from "../../application/models/auth/user_model";
 import { EmptyValue } from "../../../../core/types";
-import { EmailAuthenticationCredentials } from "../../domain/value_objects/authentication_credentials";
+import { AuthenticationUserMap } from "../../application/mappers/authentication/authentication_user_map";
 
 export class AuthenticationUserRepository implements IAuthenticationUserRepo {
   async save(
     user: AuthenticationUserAggregate
   ): Promise<Result<EmptyValue, IAuthenticationUserRepoFailure>> {
     try {
-      const exists = await UserModel.findOne({
-        where: { email: user.email.value },
-      });
-      if (exists) return Err(new AuthRepoEmailAlreadyInUseFailure());
-
-      const newUser = UserModel.build({
-        id: user.id.value,
-        email: user.email.value,
-        password: user.password.value,
-      });
-
+      const exists = await this.getUserByEmail(user.email.value);
+      if (exists.ok) return Err(new AuthRepoEmailAlreadyInUseFailure());
+      const newUser = AuthenticationUserMap.fromAggregateToModel(user);
       await newUser.save();
       DomainEventEmitter.dispatchEventsForAggregate(user.id);
       return Ok(EmptyValue);
@@ -40,13 +31,15 @@ export class AuthenticationUserRepository implements IAuthenticationUserRepo {
     }
   }
 
-  async getUserByEmailCredentials(
-    credentials: EmailAuthenticationCredentials
+  async getUserByEmail(
+    email: string
   ): Promise<
     Result<AuthenticationUserAggregate, IAuthenticationUserRepoFailure>
   > {
-    const userOrNull =await UserModel.findOne({where: {email: credentials.email.value}});
-    if(!userOrNull) return Err(new AuthRepoUserNotFound());
+    const user = await UserModel.findOneBy({ email: email });
+    if (user === null) return Err(new AuthRepoUserNotFound());
+    const userAggregate = AuthenticationUserMap.fromModelToAggregate(user);
+    return Ok(userAggregate);
   }
 
   getUserById(

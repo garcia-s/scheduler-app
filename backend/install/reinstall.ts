@@ -1,11 +1,11 @@
-import ResourceModel from "../modules/auth/application/models/resource_model";
-import ResourceTypeModel from "../modules/auth/application/models/resource_type_model";
-import UserModel from "../modules/auth/application/models/user_model";
-import UserPolicyModel from "../modules/auth/application/models/user_policy";
+
+import UserModel from "../modules/auth/application/models/auth/user_model";
+import AccessControlGroupModel from "../modules/auth/application/models/access/access_control_group_model";
+import AccessControlPolicyModel from "../modules/auth/application/models/access/access_control_policy_model";
 
 (async () => {
   try {
-    UserModel.sync()
+    
   } catch (e) {
     console.log(e);
   }

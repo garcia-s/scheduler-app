@@ -21,18 +21,10 @@ export class EmailAuthenticationCredentials extends ValueObject<IEmailAuthCreden
     return this.value.password;
   }
 
-  private constructor(params: IEmailAuthCredentialProps) {
+  constructor(params: IEmailAuthCredentialProps) {
     super(params);
   }
 
-  public static create(
-    params: IEmailAuthCredentialProps
-  ): Result<
-    EmailAuthenticationCredentials,
-    EmailAuthenticationCredentialsFailure
-  > {
-    throw UnimplementedError;
-  }
 
   equals(object: EmailAuthenticationCredentials): boolean {
     return (

@@ -32,11 +32,17 @@ export class AuthenticationUserAggregate extends Aggregate<AuthenticationUser> {
     // verify entity integrity
     if (userOrFailure.err) return Err(InvalidAuthenticationUserEntity);
     // Create the instance for the aggregate
-    const instance = new AuthenticationUserAggregate(userOrFailure.val)
+    const instance = new AuthenticationUserAggregate(userOrFailure.val);
     // Emit the creation domain event
-    instance.addDomainEvent(new CreatedAuthenticationUser(userOrFailure.val))
+    instance.addDomainEvent(new CreatedAuthenticationUser(userOrFailure.val));
     // return the instance
     return Ok(instance);
+  }
+
+  public static recostitute(
+    root: AuthenticationUser
+  ): AuthenticationUserAggregate {
+    return new AuthenticationUserAggregate(root);
   }
 }
 

@@ -10,8 +10,8 @@ export interface IAuthenticationUserRepo {
     user: AuthenticationUserAggregate
   ): Promise<Result<EmptyValue, IAuthenticationUserRepoFailure>>;
 
-  getUserByEmailCredentials(
-    email: EmailAuthenticationCredentials
+  getUserByEmail(
+    email: string
   ): Promise<
     Result<AuthenticationUserAggregate, IAuthenticationUserRepoFailure>
   >;

@@ -18,14 +18,11 @@ export abstract class EmailCredentialsMap {
     if (emailOrfailure.err || passwordOrFailure.err)
       return Err(new EmailCredentialsMapFailure());
 
-    const emailCrendentialsOrFailure = EmailAuthenticationCredentials.create({
+    const emailCredentials = new EmailAuthenticationCredentials({
       email: emailOrfailure.val,
       password: passwordOrFailure.val,
     });
 
-    if (emailCrendentialsOrFailure.err)
-      return Err(new EmailCredentialsMapFailure());
-
-    return Ok(emailCrendentialsOrFailure.val);
+    return Ok(emailCredentials);
   }
 }

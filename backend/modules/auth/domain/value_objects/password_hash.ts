@@ -29,8 +29,11 @@ export class PasswordHash extends ValueObject<string> {
       return Err(new PasswordEncryptionFailure());
     }
   }
+  public static reconstitute(value: string): PasswordHash {
+    return new PasswordHash(value);
+  }
 
-  equals(): boolean {
-    throw new UnimplementedError();
+  equals(hash: PasswordHash): boolean {
+    return this.value === hash.value
   }
 }
