@@ -33,11 +33,12 @@ export class AccessControlGroupEntity extends Entity<IAccessControlGroupParams> 
     return new AccessControlGroupEntity(params, id);
   }
 
-  deleteRolePolicy(policyId: UniqueEntityID) {
+  deletePolicy(policyId: UniqueEntityID) {
     throw new UnimplementedError();
   }
 
-  addRolePolicy(policy: AccessControlGroupEntity) {
-    throw new UnimplementedError();
+  addPolicy(policy: AccessControlPolicyEntity) {
+   this.props.policies.push(policy)
   }
+
 }

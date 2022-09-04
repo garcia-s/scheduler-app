@@ -1,6 +1,7 @@
 import UniqueEntityID from "../../../../../core/domain/value_objects/unique_entity_id";
 import { AccessControlPolicyEntity } from "../../../domain/entities/access/access_control_policy";
 import AccessControlPolicyDTO from "../../dto/access/access_control_policy_dto";
+import { AccessControlPolicyByNameAdditionDTO } from "../../dto/access/new_access_control_policy_dto";
 import AccessControlPolicyModel from "../../models/access/access_control_policy_model";
 
 export default abstract class AccessControlPolicyMap {
@@ -43,5 +44,18 @@ export default abstract class AccessControlPolicyMap {
     policyModel.objectOwner = entity.objectOwner;
     policyModel.objectId = entity.objectId;
     return policyModel;
+  }
+
+  public static fromDTOtoEntity(
+    dto: AccessControlPolicyByNameAdditionDTO
+  ): AccessControlPolicyEntity {
+    
+    return AccessControlPolicyEntity.create({
+      subject: dto.subject,
+      objectId: dto.objectId,
+      action: dto.action,
+      objectOwner: dto.objectOwner,
+      objectType: dto.objectType,
+    });
   }
 }

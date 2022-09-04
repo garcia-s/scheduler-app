@@ -13,8 +13,6 @@ import Failure from "../../../../../core/interfaces/failure";
 // Object: The resource being accessed by the subject.
 // And this should contain the characterstics needed to determine the resource identity.
 
-
-
 export enum ObjectOwnerSelectors {
   any = "*",
   self = "!",
@@ -34,39 +32,41 @@ export interface IAccessControlPolicyParams {
 }
 
 export class AccessControlPolicyEntity extends Entity<IAccessControlPolicyParams> {
-  
-  get subject()  : string {
-    return this.props.subject
+  get subject(): string {
+    return this.props.subject;
   }
 
-  get action() : string {
-    return this.props.action
+  get action(): string {
+    return this.props.action;
   }
 
-  get objectType() : string{
-    return this.props.objectType
+  get objectType(): string {
+    return this.props.objectType;
   }
 
-  get objectOwner() : string {
-    return this.props.objectOwner
+  get objectOwner(): string {
+    return this.props.objectOwner;
   }
-  
-  get objectId() : string {
-    return this.props.objectOwner
+
+  get objectId(): string {
+    return this.props.objectOwner;
   }
-  
+
   private constructor(params: IAccessControlPolicyParams, id?: UniqueEntityID) {
     super(params, id);
   }
 
   public static create(
     params: IAccessControlPolicyParams
-  ): Result<AccessControlPolicyEntity, IAccessControlPolicyFailure> {
-    return Ok(new AccessControlPolicyEntity(params));
+  ): AccessControlPolicyEntity {
+    return new AccessControlPolicyEntity(params);
   }
 
-  public static reconstitute( params: IAccessControlPolicyParams, id: UniqueEntityID) {
-    return new AccessControlPolicyEntity(params, id)
+  public static reconstitute(
+    params: IAccessControlPolicyParams,
+    id: UniqueEntityID
+  ) {
+    return new AccessControlPolicyEntity(params, id);
   }
 }
 

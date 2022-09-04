@@ -17,6 +17,12 @@ export interface IAccessControlGroupRepository {
     Result<AccessControlGroupAggregate, IAccessControlGroupRepoFailure>
   >;
 
+  getAccessControlGroupByName(
+    id: UniqueEntityID
+  ): Promise<
+    Result<AccessControlGroupAggregate, IAccessControlGroupRepoFailure>
+  >;
+
   getAccessControlGroupByUserId(
     id: UniqueEntityID
   ): Promise<
