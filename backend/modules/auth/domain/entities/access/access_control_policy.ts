@@ -3,6 +3,7 @@ import { Err, Ok, Result } from "ts-results";
 import UniqueEntityID from "../../../../../core/domain/value_objects/unique_entity_id";
 import { Entity } from "../../../../../core/interfaces/entity";
 import Failure from "../../../../../core/interfaces/failure";
+import { AccessRequest } from "../../value_objects/access_request";
 
 // Policies should have:
 //
@@ -24,7 +25,6 @@ export enum ObjectIDSelector {
 export type ObjectID = string | ObjectIDSelector;
 
 export interface IAccessControlPolicyParams {
-  subject: string;
   action: string;
   objectType: string;
   objectOwner: ObjectOwnerID;
@@ -32,10 +32,25 @@ export interface IAccessControlPolicyParams {
 }
 
 export class AccessControlPolicyEntity extends Entity<IAccessControlPolicyParams> {
-  get subject(): string {
-    return this.props.subject;
+  //Contructor and factories
+  private constructor(params: IAccessControlPolicyParams, id?: UniqueEntityID) {
+    super(params, id);
   }
 
+  public static create(
+    params: IAccessControlPolicyParams
+  ): AccessControlPolicyEntity {
+    return new AccessControlPolicyEntity(params);
+  }
+
+  public static reconstitute(
+    params: IAccessControlPolicyParams,
+    id: UniqueEntityID
+  ) {
+    return new AccessControlPolicyEntity(params, id);
+  }
+
+  // Getters and setters
   get action(): string {
     return this.props.action;
   }
@@ -52,21 +67,17 @@ export class AccessControlPolicyEntity extends Entity<IAccessControlPolicyParams
     return this.props.objectOwner;
   }
 
-  private constructor(params: IAccessControlPolicyParams, id?: UniqueEntityID) {
-    super(params, id);
-  }
+  // behavior
 
-  public static create(
-    params: IAccessControlPolicyParams
-  ): AccessControlPolicyEntity {
-    return new AccessControlPolicyEntity(params);
-  }
-
-  public static reconstitute(
-    params: IAccessControlPolicyParams,
-    id: UniqueEntityID
-  ) {
-    return new AccessControlPolicyEntity(params, id);
+  hasAccess(userId: UniqueEntityID, request: AccessRequest): boolean {
+    return (
+      (request.action === this.action || request.action === "*") &&
+      (request.objectOwner === this.objectOwner ||
+        this.objectOwner === "*" ||
+        (this.objectOwner === "!" && userId.value === request.objectOwner)) &&
+      (request.objectId === this.objectId || this.objectId === "*") &&
+      request.objectType === this.objectType
+    );
   }
 }
 

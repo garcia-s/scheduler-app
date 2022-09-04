@@ -15,6 +15,7 @@ export class PasswordHash extends ValueObject<string> {
     super(value);
   }
 
+  
   public static create(
     value: string
   ): Result<PasswordHash, IPasswordHashFailure> {
@@ -26,6 +27,11 @@ export class PasswordHash extends ValueObject<string> {
       return Err(new PasswordEncryptionFailure());
     }
   }
+
+  get value(): string  {
+    return this._value;
+  }
+  
   public static reconstitute(value: string): PasswordHash {
     return new PasswordHash(value);
   }

@@ -2,6 +2,7 @@ import { Ok, Result } from "ts-results";
 import UniqueEntityID from "../../../../../core/domain/value_objects/unique_entity_id";
 import { UnimplementedError } from "../../../../../core/errors/general";
 import { Entity } from "../../../../../core/interfaces/entity";
+import { AccessRequest } from "../../value_objects/access_request";
 import { AccessControlPolicyEntity } from "./access_control_policy";
 
 export interface IAccessControlGroupParams {
@@ -39,6 +40,13 @@ export class AccessControlGroupEntity extends Entity<IAccessControlGroupParams> 
 
   addPolicy(policy: AccessControlPolicyEntity) {
    this.props.policies.push(policy)
+  }
+
+  hasAccess(userId: UniqueEntityID, request:AccessRequest):boolean {
+    for(let i = 0; i< this.policies.length; i++) {
+      if(this.policies[i].hasAccess(userId, request)) return true;
+    }
+    return false;
   }
 
 }

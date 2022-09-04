@@ -14,11 +14,11 @@ export class EmailAuthenticationCredentialsFailure extends Failure {}
 
 export class EmailAuthenticationCredentials extends ValueObject<IEmailAuthCredentialProps> {
   get email(): EmailAddress {
-    return this.value.email;
+    return this._value.email;
   }
 
   get password(): PasswordHash {
-    return this.value.password;
+    return this._value.password;
   }
 
   constructor(params: IEmailAuthCredentialProps) {
@@ -28,8 +28,8 @@ export class EmailAuthenticationCredentials extends ValueObject<IEmailAuthCreden
 
   equals(object: EmailAuthenticationCredentials): boolean {
     return (
-      object.value.email === this.value.email &&
-      object.value.password === this.value.password
+      object.email === this._value.email &&
+      object.password === this._value.password
     );
   }
 }

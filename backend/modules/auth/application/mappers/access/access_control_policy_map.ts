@@ -11,7 +11,6 @@ export default abstract class AccessControlPolicyMap {
     return {
       id: policy.id.value,
       action: policy.action,
-      subject: policy.subject,
       objectType: policy.objectType,
       objectOwner: policy.objectOwner,
       objectId: policy.objectId,
@@ -23,7 +22,6 @@ export default abstract class AccessControlPolicyMap {
   ): AccessControlPolicyEntity {
     return AccessControlPolicyEntity.reconstitute(
       {
-        subject: model.subject,
         action: model.action,
         objectType: model.objectType,
         objectOwner: model.objectOwner,
@@ -38,7 +36,6 @@ export default abstract class AccessControlPolicyMap {
   ): AccessControlPolicyModel {
     const policyModel = new AccessControlPolicyModel();
     policyModel.id = entity.id.value;
-    policyModel.subject = entity.subject;
     policyModel.action = entity.action;
     policyModel.objectType = entity.objectType;
     policyModel.objectOwner = entity.objectOwner;
@@ -51,7 +48,6 @@ export default abstract class AccessControlPolicyMap {
   ): AccessControlPolicyEntity {
     
     return AccessControlPolicyEntity.create({
-      subject: dto.subject,
       objectId: dto.objectId,
       action: dto.action,
       objectOwner: dto.objectOwner,

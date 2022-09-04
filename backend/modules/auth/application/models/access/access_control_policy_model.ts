@@ -8,9 +8,6 @@ export default class AccessControlPolicyModel extends BaseEntity {
   @PrimaryColumn({type:'uuid'})
   id: string;
 
-  @Column({type: 'text'})
-  subject: string;
-
   @Column({type:"varchar", length:6})
   action: string;
 

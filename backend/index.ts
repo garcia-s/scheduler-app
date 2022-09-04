@@ -10,16 +10,15 @@ const app = express();
 const server = createServer(app);
 
 const transport = new TransportServer({
-  server: server,
+	server: server,
 });
 
 transport.onConnect((client) => {
   client.on(userEvents.createUser.request, CreateUserSocketController.execute);
-  client.on(
+		client.on(
     userEvents.login.request,
     LoginWithEmailCredentialsController.execute
   );
-
   client.onClose(() => {
     client.off(
       userEvents.createUser.request,

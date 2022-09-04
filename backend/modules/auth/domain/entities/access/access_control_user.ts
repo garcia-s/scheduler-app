@@ -1,6 +1,7 @@
 import { EmailAddress } from "../../../../../core/domain/value_objects/email";
 import UniqueEntityID from "../../../../../core/domain/value_objects/unique_entity_id";
 import { Entity } from "../../../../../core/interfaces/entity";
+import { AccessRequest } from "../../value_objects/access_request";
 import { AccessControlGroupEntity } from "./access_control_group";
 
 export interface IAccessControlUserParams {
@@ -9,6 +10,7 @@ export interface IAccessControlUserParams {
 }
 
 export class AccessControlUserEntity extends Entity<IAccessControlUserParams> {
+
   public get groups(): AccessControlGroupEntity[] {
     return this.props.accessControlGroups;
   }
@@ -49,5 +51,12 @@ export class AccessControlUserEntity extends Entity<IAccessControlUserParams> {
       ...this.props.accessControlGroups,
       ...groups,
     ];
+  }
+
+  hasAccess(request: AccessRequest) {
+    for(let i = 0; i < this.groups.length; i++) {
+      if(this.groups[i].hasAccess(this._id, request)) return true;
+    }
+    return false;
   }
 }
