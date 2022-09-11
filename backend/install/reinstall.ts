@@ -1,7 +1,7 @@
 
-import UserModel from "../modules/auth/application/models/auth/user_model";
-import AccessControlGroupModel from "../modules/auth/application/models/access/access_control_group_model";
-import AccessControlPolicyModel from "../modules/auth/application/models/access/access_control_policy_model";
+import UserModel from "../modules/authentication/application/models/user_model";
+import GroupModel from "../modules/authentication/application/models/access/access_control_group_model";
+import PolicyModel from "../modules/authentication/application/models/access/access_control_policy_model";
 
 (async () => {
   try {

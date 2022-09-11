@@ -1,9 +1,9 @@
-import UniqueEntityID from "../domain/value_objects/unique_entity_id";
-import { IDomainEvent } from "../domain/events/domain_event";
-import { Entity } from "./entity";
-import { DomainEventEmitter } from "../domain/events/domain_event_emitter";
 
-export default abstract class AggregateRoot<R extends Entity<any>> {
+import { IDomainEvent } from "./domain_event";
+import { Entity } from "./entity";
+import { DomainEventEmitter } from "./domain_event_emitter";
+
+export default abstract class Aggregate<R extends Entity> {
   private _root: R;
   private _domainEvents: IDomainEvent[] = [];
 
@@ -15,7 +15,7 @@ export default abstract class AggregateRoot<R extends Entity<any>> {
     return this._root;
   }
 
-  get id(): UniqueEntityID {
+  get id(): string {
     return this._root.id
   }
 
@@ -23,7 +23,7 @@ export default abstract class AggregateRoot<R extends Entity<any>> {
     return this._domainEvents;
   }
 
-  equals(aggregate: AggregateRoot<any>): boolean {
+  equals(aggregate: Aggregate<any>): boolean {
     return this._root.equals(aggregate.root)
   }
 
@@ -34,5 +34,9 @@ export default abstract class AggregateRoot<R extends Entity<any>> {
 
   public clearEvents(): void {
     this._domainEvents.splice(0, this._domainEvents.length);
+  }
+
+  protected dispatchEventForAggregate() {
+    DomainEventEmitter.dispatchEventsForAggregate(this.root.id);
   }
 }
