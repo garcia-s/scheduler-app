@@ -2,11 +2,11 @@ import { IDomainEvent } from "../../../../core/interfaces/domain_event";
 import { AccessRequest } from "../value_objects/access_request";
 
 export default class AccessRequestEvent extends IDomainEvent {
-    private _aggregateId: UniqueEntityID;
+    private _aggregateId: string;
     private _userName: string;
     private _request: AccessRequest
     
-    get aggregateId(): UniqueEntityID {
+    get aggregateId(): string {
         return this._aggregateId;
     }
 
@@ -18,7 +18,7 @@ export default class AccessRequestEvent extends IDomainEvent {
         return this._request;
     }
 
-    constructor(aggregateId: UniqueEntityID, userName: string, request: AccessRequest) {
+    constructor(aggregateId: string, userName: string, request: AccessRequest) {
         super();
         this._aggregateId = aggregateId;
         this._userName = userName;

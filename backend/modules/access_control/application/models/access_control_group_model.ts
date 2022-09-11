@@ -5,10 +5,8 @@ import UserModel from "./access_control_user_model";
 
 @Entity("access_group")
 export default class GroupModel extends BaseEntity {
-  @PrimaryColumn({ type: "uuid" })
-  id: string;
-
-  @Column({ type: "varchar", length: 30 })
+  
+  @PrimaryColumn({ type: "varchar", length: 200, unique:true })
   name: string;
 
   @OneToMany(() => PolicyModel, (policy) => policy.group)

@@ -3,7 +3,7 @@ import { string } from "../../../../core/domain/value_objects/email";
 import { UnimplementedError } from "../../../../core/errors/general";
 import Failure from "../../../../core/interfaces/failure";
 import ValueObject from "../../../../core/interfaces/value_object";
-import { PasswordHash } from "../../../authentication/_domain/value_objects/password_hash";
+import { PasswordHash } from "../../../authentication/_domain/value_objects/password";
 
 interface IEmailAuthCredentialProps {
   email: string;

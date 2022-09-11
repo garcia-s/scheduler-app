@@ -1,4 +1,5 @@
 import { Entity } from "../../../../core/interfaces/entity";
+import { Username } from "../../../../core/value_objects/username";
 import { AccessRequest } from "../value_objects/access_request";
 import { GroupEntity } from "./access_control_group";
 
@@ -18,11 +19,11 @@ export class UserEntity extends Entity {
     this._accessControlGroups = params.accessControlGroups;
   }
 
-  public static create(id: string, username: string): UserEntity {
-    const userGroup = GroupEntity.create(username, []);
+  public static create(id: string, username: Username): UserEntity {
+    const userGroup = GroupEntity.create(username.value, []);
     return new UserEntity({
       id: id,
-      username: username,
+      username: username.value,
       accessControlGroups: [userGroup],
     });
   }

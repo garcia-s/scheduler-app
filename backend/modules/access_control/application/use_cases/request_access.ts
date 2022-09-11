@@ -3,7 +3,7 @@ import UniqueEntityID from "../../../../core/domain/value_objects/unique_entity_
 import Failure from "../../../../core/interfaces/failure";
 import AccessRequestDTO from "../dto/access_request_dto";
 import AccessRequestMap from "../mappers/access_request_map";
-import { IUserRepository } from "../repositories/access_control_user_repo";
+import { IUserRepository } from "../repo_interfaces/user_repo";
 
 
 export class UserNotFoundFailure extends Failure {}

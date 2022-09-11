@@ -1,4 +1,3 @@
-import UniqueEntityID from "../../../../../core/domain/value_objects/unique_entity_id";
 import { PolicyEntity } from "../../../../../modules/access_control/_domain/entities/access_control_policy";
 import { AccessRequest } from "../../../../../modules/authentication/_domain/value_objects/access_request";
 
@@ -18,7 +17,7 @@ describe("Test for access control policy entity", () => {
       objectOwner: "*",
     });
     const request = AccessRequest.create(baseRequest);
-    const access = policy.hasAccess(new UniqueEntityID("fake"), request);
+    const access = policy.hasAccess("fake", request);
     expect(access).toBeTruthy();
   });
 
@@ -37,8 +36,8 @@ describe("Test for access control policy entity", () => {
       ...baseRequest,
       action: "notAnAction",
     });
-    const truthy = policy.hasAccess(new UniqueEntityID("fake"), truthyRequest);
-    const falsy = policy.hasAccess(new UniqueEntityID("fake"), falsyRequest);
+    const truthy = policy.hasAccess("fake", truthyRequest);
+    const falsy = policy.hasAccess("fake", falsyRequest);
     expect(truthy).toBeTruthy();
     expect(falsy).toBeFalsy();
   });
@@ -52,7 +51,7 @@ describe("Test for access control policy entity", () => {
       objectOwner: "*",
     });
     const request = AccessRequest.create({ ...baseRequest, objectId: "33" });
-    const access = policy.hasAccess(new UniqueEntityID("fake"), request);
+    const access = policy.hasAccess("fake", request);
     expect(access).toBeTruthy();
   });
 
@@ -69,7 +68,7 @@ describe("Test for access control policy entity", () => {
       objectId: "33",
       objectOwner: "333",
     });
-    const access = policy.hasAccess(new UniqueEntityID("333"), request);
+    const access = policy.hasAccess("333", request);
     expect(access).toBeTruthy();
   });
 
@@ -87,7 +86,7 @@ describe("Test for access control policy entity", () => {
       objectType: "request",
       objectOwner: "333",
     });
-    const access = policy.hasAccess(new UniqueEntityID("333"), request);
+    const access = policy.hasAccess("333", request);
     expect(access).toBeTruthy();
   });
 });

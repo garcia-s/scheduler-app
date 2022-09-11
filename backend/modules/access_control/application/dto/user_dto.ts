@@ -1,4 +1,4 @@
-import GroupDTO from "./access_control_role_dto";
+import GroupDTO from "./role_dto";
 
 
 export default interface UserDTO  {

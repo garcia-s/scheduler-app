@@ -4,7 +4,6 @@ import { Entity } from "../../../../core/interfaces/entity";
 import { AccessRequest } from "../value_objects/access_request";
 import { PolicyEntity } from "./access_control_policy";
 
-
 export class GroupEntity extends Entity {
   private _id: string;
   private _policies: PolicyEntity[];
@@ -17,10 +16,7 @@ export class GroupEntity extends Entity {
     return this._policies;
   }
 
-  private constructor(
-    id: string,
-    policies: PolicyEntity[],
-  ) {
+  private constructor(id: string, policies: PolicyEntity[]) {
     super();
     this._id = id;
     this._policies = policies;
@@ -32,7 +28,7 @@ export class GroupEntity extends Entity {
 
   public static reconstitute(
     id: string,
-    policies: PolicyEntity[],
+    policies: PolicyEntity[]
   ): GroupEntity {
     return new GroupEntity(id, policies);
   }

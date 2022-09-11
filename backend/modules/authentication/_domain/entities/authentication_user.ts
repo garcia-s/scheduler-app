@@ -1,8 +1,9 @@
-import { PasswordHash } from "../value_objects/password_hash";
+import { Password } from "../value_objects/password";
 import { UnimplementedError } from "../../../../core/errors/general";
 import crypto from "crypto";
 import { Entity } from "../../../../core/interfaces/entity";
 import { v4 as uuid } from "uuid";
+import { Username } from "../../../../core/value_objects/username";
 
 export class AuthenticationUser extends Entity {
   private _id: string;
@@ -23,15 +24,15 @@ export class AuthenticationUser extends Entity {
       (this._passwordSalt = params.passwordSalt);
   }
 
-  public static create(username: string, password: string): AuthenticationUser {
+  public static create(username: Username, password: Password): AuthenticationUser {
     const id = uuid();
     const passwordSalt = crypto.randomBytes(32).toString();
-    const passwordHash = AuthenticationUser.hash(password, passwordSalt);
+    const passwordHash = AuthenticationUser.hash(password.value, passwordSalt);
     return new AuthenticationUser({
       id,
-      username,
       passwordHash,
       passwordSalt,
+      username: username.value,
     });
   }
 
@@ -57,6 +58,14 @@ export class AuthenticationUser extends Entity {
     return this._username;
   }
 
+  get passwordHash(): string {
+    return this._passwordHash
+  }
+
+  get passwordSalt(): string {
+    return this._passwordSalt;
+  }
+
  /// Behavior
   passwordMatch(password: string): boolean {
     return (
@@ -70,7 +79,7 @@ export class AuthenticationUser extends Entity {
     throw UnimplementedError;
   }
 
-  changePassword(passwordHash: PasswordHash): void {
+  changePassword(passwordHash: Password): void {
     throw UnimplementedError;
   }
 }

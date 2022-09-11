@@ -1,8 +1,9 @@
-import UniqueEntityID from "../../../../core/domain/value_objects/unique_entity_id";
+
 import Aggregate from "../../../../core/interfaces/aggregate";
 import Failure from "../../../../core/interfaces/failure";
+import { Username } from "../../../../core/value_objects/username";
 import { GroupEntity } from "../entities/access_control_group";
-import { IUserParams, UserEntity } from "../entities/access_control_user";
+import { UserEntity } from "../entities/access_control_user";
 import AccessRequestEvent from "../events/access_request_event";
 import AddedGroupsToUserEvent from "../events/added_group_to_user_event";
 import { AccessRequest } from "../value_objects/access_request";
@@ -22,18 +23,20 @@ export class UserAggregate extends Aggregate<UserEntity> {
 
 	// Creation factory
 	public static create(
-		id: UniqueEntityID,
-		username: string
+		id: string,
+		username: Username
 	): UserAggregate {
 		const root = UserEntity.create(id, username);
 		return new UserAggregate(root);
 	}
 
 	public static reconstitute(
-		id: UniqueEntityID,
-		params: IUserParams
-	): UserAggregate {
-		const root = UserEntity.reconstitute(id, params);
+		params: {
+			id: string,
+			username: string,
+			accessControlGroups: GroupEntity[],
+		  }): UserAggregate {
+		const root = UserEntity.reconstitute(params);
 		return new UserAggregate(root);
 	}
 

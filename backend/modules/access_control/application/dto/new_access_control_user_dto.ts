@@ -1,8 +1,8 @@
 import { string } from "fp-ts";
-import GroupDTO from "./access_control_role_dto";
+import GroupDTO from "./role_dto";
 
 export default interface NewUserDTO  {
     id: string,
     username: string,
-    accessControlGroupNames: string[],
+    groups: string[],
 }

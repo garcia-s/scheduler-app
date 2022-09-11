@@ -1,11 +1,11 @@
-import { string } from "fp-ts";
 import { Err, Ok, Result } from "ts-results";
-import UniqueEntityID from "../../../../core/domain/value_objects/unique_entity_id";
+import Failure from "../../../../core/interfaces/failure";
+import { Username } from "../../../../core/value_objects/username";
 import { UserAggregate } from "../../_domain/agregates/access_user_aggregate";
-import UserDTO from "../dto/access_control_user_dto";
+import UserDTO from "../dto/user_dto";
 import NewUserDTO from "../dto/new_access_control_user_dto";
 import UserMap from "../mappers/access_control_user_map";
-import { IUserRepository } from "../repositories/access_control_user_repo";
+import { IUserRepository } from "../repo_interfaces/user_repo";
 
 export class CreateUser {
   accessControlUserRepository: IUserRepository;
@@ -17,18 +17,18 @@ export class CreateUser {
   async execute(
     user: NewUserDTO
   ): Promise<Result<UserDTO, ICreateUserFailure>> {
-    // map the groups to uniqueEntityID,
+    // map the groups to string,
 
     // create the user group
+    const usernameOrFailure = Username.create(user.username);
 
-    const userAggregate = UserAggregate.create(
-      new UniqueEntityID(user.id),
-      user.username
-    );
+    if (usernameOrFailure.err) return Err(new InvalidUsernameFailure());
+
+    const userAggregate = UserAggregate.create(user.id, usernameOrFailure.val);
 
     const groups =
       await this.accessControlUserRepository.getGroupEntitiesByNames(
-        user.accessControlGroupNames
+        user.groups
       );
 
     userAggregate.addGroups(groups);
@@ -36,12 +36,11 @@ export class CreateUser {
       userAggregate
     );
 
-    if (saveOrFailure.err)
-      return Err(new CreateUserUnableToWriteToDatabaseFailure());
+    if (saveOrFailure.err) return Err(new DatabaseWriteFailure());
     return Ok(UserMap.fromAggregateToDTO(userAggregate));
   }
 }
 
 export abstract class ICreateUserFailure extends Failure {}
-export class CreateUserInvalidstringFailure extends ICreateUserFailure {}
-export class CreateUserUnableToWriteToDatabaseFailure extends ICreateUserFailure {}
+export class InvalidUsernameFailure extends ICreateUserFailure {}
+export class DatabaseWriteFailure extends ICreateUserFailure {}

@@ -1,10 +1,10 @@
 import { Err, Ok, Result } from "ts-results";
 import UniqueEntityID from "../../../../core/domain/value_objects/unique_entity_id";
 import Failure from "../../../../core/interfaces/failure";
-import PolicyDTO from "../dto/access_control_policy_dto";
+import PolicyDTO from "../dto/policy_dto";
 import { PolicyByNameAdditionDTO } from "../dto/new_access_control_policy_dto";
 import PolicyMap from "../mappers/access_control_policy_map";
-import { IGroupRepository } from "../repositories/access_control_group_repo";
+import { IGroupRepository } from "../repo_interfaces/group_repo";
 
 export abstract class IAddPolicyToGroupFailure extends Failure {}
 export class GroupNotFound extends IAddPolicyToGroupFailure {}

@@ -1,16 +1,15 @@
 import Aggregate from "./aggregate";
 import { IDomainEvent } from "./domain_event";
-import UniqueEntityID from "../domain/value_objects/unique_entity_id";
 import { Entity } from "./entity";
 
-class HashMap<T> implements Object {
-  [key: PropertyKey]: T;
+class Map<T> implements Object {
+  [key: string]: T;
 }
 
 type DomainEventHandler<> = (event: IDomainEvent) => void;
 
 export class DomainEventEmitter {
-  private static handlersMap: HashMap<DomainEventHandler[]> = {};
+  private static handlersMap: Map<DomainEventHandler[]> = {};
   private static markedAggregates: Aggregate<any>[] = [];
 
   /**
@@ -63,11 +62,11 @@ export class DomainEventEmitter {
    */
 
   private static findMarkedAggregateByID(
-    id: UniqueEntityID
+    id: string
   ): Aggregate<any> | null {
     let found: Aggregate<any> | null = null;
     for (let aggregate of this.markedAggregates) {
-      if (aggregate.id.equals(id)) {
+      if (aggregate.id === id) {
         found = aggregate;
       }
     }
@@ -83,7 +82,7 @@ export class DomainEventEmitter {
    * aggregate.
    */
 
-  public static dispatchEventsForAggregate(id: UniqueEntityID): void {
+  public static dispatchEventsForAggregate(id: string): void {
     const aggregate = this.findMarkedAggregateByID(id);
 
     if (aggregate) {

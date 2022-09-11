@@ -1,7 +1,7 @@
 import { string } from "fp-ts";
 import { IDomainEvent } from "../../../../core/interfaces/domain_event";
 
-class LoginAttemptEvent extends IDomainEvent {
+export default class LoginAttemptEvent extends IDomainEvent {
     private _id: string;
     private _username: string;
     private _success: boolean; 

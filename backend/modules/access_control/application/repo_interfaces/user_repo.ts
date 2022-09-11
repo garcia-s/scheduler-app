@@ -1,5 +1,4 @@
 import { Result } from "ts-results";
-import UniqueEntityID from "../../../../core/domain/value_objects/unique_entity_id";
 import { UserAggregate } from "../../_domain/agregates/access_user_aggregate";
 import { GroupEntity } from "../../_domain/entities/access_control_group";
 
@@ -8,8 +7,8 @@ export interface IUserRepository {
     user: UserAggregate
   ): Promise<Result<null, IUserRepositoryFailure>>;
 
-  getGroupEntitiesByIds(
-    ids: UniqueEntityID[]
+  getGroupEntitiesByNames(
+    ids: string[]
   ): Promise<GroupEntity[]>;
 
   getGroupEntitiesByNames(
@@ -17,7 +16,7 @@ export interface IUserRepository {
   ): Promise<GroupEntity[]>;
 
   getUserById(
-    id: UniqueEntityID
+    id: string
   ): Promise<Result<UserAggregate, UserNotFound>>;
 }
 

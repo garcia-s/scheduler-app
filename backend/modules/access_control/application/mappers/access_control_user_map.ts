@@ -1,7 +1,6 @@
 
-import UniqueEntityID from "../../../../core/domain/value_objects/unique_entity_id";
 import { UserAggregate } from "../../_domain/agregates/access_user_aggregate";
-import UserDTO from "../dto/access_control_user_dto";
+import UserDTO from "../dto/user_dto";
 import UserModel from "../models/access_control_user_model";
 import GroupMap from "./access_control_group_map";
 
@@ -10,7 +9,7 @@ export default abstract class UserMap {
     user: UserAggregate
   ): UserDTO {
     return {
-      id: user.id.value,
+      id: user.id,
       username: user.username,
       accessControlGroups: user.root.groups.map((group) =>
         GroupMap.fromEntityToDTO(group)
@@ -22,7 +21,7 @@ export default abstract class UserMap {
     user: UserAggregate
   ): UserModel {
     const userModel = new UserModel();
-    userModel.id = user.id.value;
+    userModel.id = user.id;
     userModel.username = user.username;
     userModel.groups = user.groups.map((group) =>
       GroupMap.fromEntityToModel(group)
@@ -32,8 +31,8 @@ export default abstract class UserMap {
 
   public static fromModelToAggregate(user: UserModel) {
     return UserAggregate.reconstitute(
-      new UniqueEntityID(user.id),
       {
+        id: user.id,
         username: user.username,
         accessControlGroups: user.groups.map((group) =>
           GroupMap.fromModelToEntity(group)

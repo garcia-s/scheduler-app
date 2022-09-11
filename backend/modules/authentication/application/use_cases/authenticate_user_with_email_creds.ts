@@ -1,10 +1,10 @@
 import { Err, Ok, Result } from "ts-results";
 import Failure from "../../../../core/interfaces/failure";
 import UserDTO from "../dto/authentication_user_dto";
-import { EmailCredentialsDTO } from "../dto/email_credentials_dto";
+import { AuthCredentialsDTO } from "../dto/auth_credentials_dto";
 import { AuthenticationUserMap } from "../mappers/authentication_user_map";
 import { EmailCredentialsMap } from "../mappers/email_credentials_map";
-import { IAuthenticationUserRepo } from "../repositories/authentication_user_repo";
+import { IAuthenticationUserRepo } from "../repo_interfaces/authentication_user_repo";
 
 export abstract class IAuthenticateUserWithCredentialsFailure extends Failure {}
 
@@ -18,7 +18,7 @@ export class AuthenticateUserWithEmailCredentials {
     this._authenticationUserRepository = authUserRepo;
   }
   async execute(
-    credentials: EmailCredentialsDTO
+    credentials: AuthCredentialsDTO
   ): Promise<Result<UserDTO, IAuthenticateUserWithCredentialsFailure>> {
     const credentialsOrFailure =
       EmailCredentialsMap.fromDTOToValueObject(credentials);
@@ -27,13 +27,13 @@ export class AuthenticateUserWithEmailCredentials {
       return Err(new AuthCredentialsValidationFailure());
 
     const authenticationUserOrFailure =
-      await this._authenticationUserRepository.getUserByEmail(
-        credentialsOrFailure.val.email.value
+      await this._authenticationUserRepository.getUserByUsername(
+        credentialsOrFailure.val.email
       );
 
     if (
       authenticationUserOrFailure.err ||
-      !authenticationUserOrFailure.val.password.equals(
+      !authenticationUserOrFailure.val.passwordMatch(
         credentialsOrFailure.val.password
       )
     )

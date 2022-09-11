@@ -26,7 +26,7 @@ export interface IPolicyRepository {
     ids: UniqueEntityID[]
   ): Promise<GroupEntity[]>;
 
-  getGroupEntitiesByIds(
+  getGroupEntitiesByNames(
     ids: UniqueEntityID[]
   ): Promise<GroupEntity[]>;
 }

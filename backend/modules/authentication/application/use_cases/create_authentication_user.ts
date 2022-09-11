@@ -1,11 +1,12 @@
-import { Err, Ok } from "ts-results";
-import { string } from "../../../../core/domain/value_objects/email";
+import { Err, Ok, Result } from "ts-results";
 import Failure from "../../../../core/interfaces/failure";
 import { AuthenticationUserAggregate } from "../../_domain/agregates/authentication_user_aggregate";
-import { PasswordHash } from "../../_domain/value_objects/password_hash";
+import { Password} from "../../_domain/value_objects/password";
+import { Username } from "../../../../core/value_objects/username";
 import { NewAuthenticationUserDTO } from "../dto/new_authentication_user_dto";
 import { AuthenticationUserMap } from "../mappers/authentication_user_map";
-import { AuthRepoEmailAlreadyInUseFailure, IAuthenticationUserRepo } from "../repositories/authentication_user_repo";
+import { IAuthenticationUserRepo, UsernameAlreadyInUseFailure } from "../repo_interfaces/authentication_user_repo";
+import AuthenticationUserDTO from "../dto/authentication_user_dto";
 
 
 export class CreateAuthenticationUser {
@@ -15,37 +16,38 @@ export class CreateAuthenticationUser {
     this._repository = repository;
   }
 
-  async execute(user: NewAuthenticationUserDTO) {
-    const emailOrFailure = string.create(user.email);
-    const passwordOrFailure = PasswordHash.create(user.password);
+  async execute(user: NewAuthenticationUserDTO):Promise<Result<AuthenticationUserDTO, Failure>> {
+    const usernameOrFailure = Username.create(user.username);
+    const passwordOrFailure = Password.create(user.password);
 
-    if (emailOrFailure.err || passwordOrFailure.err)
-      return Err(CreateUserInputValidationFailure);
+    if (usernameOrFailure.err)
+      return Err(new UsernameValidationFailure());
+    
+    if(passwordOrFailure.err)
+      return Err(new PasswordValidationFailure());
 
-    const userAggregateOrFailure = AuthenticationUserAggregate.create({
-      email: emailOrFailure.val,
-      passwordHash: passwordOrFailure.val,
-    });
-
-    if (userAggregateOrFailure.err)
-      return Err(CreateUserInputValidationFailure);
+    const aggregate = AuthenticationUserAggregate.create(
+      usernameOrFailure.val,
+      passwordOrFailure.val,
+    );
 
     const savedOrfailure = await this._repository.save(
-      userAggregateOrFailure.val
+      aggregate
     );
 
     if (savedOrfailure.err) {
-      if (savedOrfailure.val instanceof AuthRepoEmailAlreadyInUseFailure)
-        return Err(new CreateUserUseCaseEmailAlreadyUsedFailure());
+      if (savedOrfailure.val instanceof UsernameAlreadyInUseFailure)
+        return Err(new UsernameAlreadyUsedFailure());
         
-      return Err(new CreateUserDatabaseInsertionFailure());
+      return Err(new DatabaseInsertionFailure());
     }
     return Ok(
-      AuthenticationUserMap.fromEntityToDTO(userAggregateOrFailure.val.root)
+      AuthenticationUserMap.fromEntityToDTO(aggregate.root)
     );
   }
 }
 
-export class CreateUserInputValidationFailure extends Failure {}
-export class CreateUserUseCaseEmailAlreadyUsedFailure extends Failure {}
-export class CreateUserDatabaseInsertionFailure extends Failure {}
+export class UsernameValidationFailure extends Failure {}
+export class PasswordValidationFailure extends Failure {}
+export class UsernameAlreadyUsedFailure extends Failure {}
+export class DatabaseInsertionFailure extends Failure {}

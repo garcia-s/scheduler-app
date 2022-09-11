@@ -6,11 +6,13 @@ export default class UserModel extends BaseEntity {
   id: string;
 
   @Column({type: "varchar",length: 50})
-  email: string;
+  username: string;
 
   @Column({type:'text'})
   password: string
 
+  @Column({type:'text'})
+  salt: string;
   // constructor(id: string, email: string, password: string) {
   //   super();
   //   this.id = id;
