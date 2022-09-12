@@ -1,6 +1,6 @@
 import { Result } from "ts-results";
 import Failure from "../../../../core/interfaces/failure";
-import { GroupAggregate } from "../../_domain/agregates/access_group_aggregate";
+import { GroupAggregate } from "../../_domain/aggregates/access_group_aggregate";
 import { GroupEntity } from "../../_domain/entities/access_control_group";
 
 export abstract class IGroupRepoFailure extends Failure {}

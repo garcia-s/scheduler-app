@@ -1,6 +1,6 @@
 import { Result } from "ts-results";
 import Failure from "../../../../core/interfaces/failure";
-import { AuthenticationUserAggregate } from "../../_domain/agregates/authentication_user_aggregate";
+import { AuthenticationUserAggregate } from "../../_domain/aggregates/authentication_user_aggregate";
 
 
 export interface IAuthenticationUserRepo {

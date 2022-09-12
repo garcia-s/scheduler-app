@@ -1,35 +1,23 @@
 import { PostgresDataSource } from "../datasources";
 import NewGroupDTO from "../modules/access_control/application/dto/new_group_dto";
-import { GroupRepository } from "../modules/access_control/application/repo_impl/group_repository";
+import { GroupRepository } from "../modules/access_control/application/repo_impl/group_repository_impl";
 import { CreateGroup } from "../modules/access_control/application/use_cases/create_group";
 
 (async () => {
   await PostgresDataSource.initialize();
   const schedulingAccessGroup: NewGroupDTO = {
-    name: "client_schedule",
+    name: "superuser",
     policies: [
       {
-        action: "create",
+        action: "*",
         objectId: "*",
-        objectOwner: "!",
-        objectType: "appointment",
-      },
-      {
-        action: "read",
-        objectId: "*",
-        objectOwner: "!",
-        objectType: "appointment",
-      },
-      {
-        action: "update",
-        objectId: "*",
-        objectOwner: "!",
-        objectType: "appointment",
+        objectOwner: "*",
+        objectType: "service",
       },
     ],
   };
 
   const createGroup = new CreateGroup(new GroupRepository());
-  const response = await createGroup.execute(schedulingAccessGroup);
-  console.log(response);
+  await createGroup.execute(schedulingAccessGroup);
+
 })();

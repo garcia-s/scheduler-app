@@ -1,6 +1,6 @@
 import { text } from "express";
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
-import GroupModel from "./access_control_group_model";
+import GroupModel from "./group_model";
 
 @Entity("access_policy")
 export default class PolicyModel extends BaseEntity {

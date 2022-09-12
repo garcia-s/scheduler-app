@@ -3,7 +3,7 @@ import { GetUserBy } from "../modules/access_control/application/use_cases/get_a
 import { AuthCredentialsDTO } from "../modules/authentication/application/dto/auth_credentials_dto";
 import { AuthenticateUserWithEmailCredentials } from "../modules/authentication/application/use_cases/authenticate_user_with_email_creds";
 import { userEvents } from "../socket-events";
-import { UserRepository } from "../modules/access_control/application/repo_impl/access_control_user_repository_impl";
+import { UserRepository } from "../modules/access_control/application/repo_impl/user_repository_impl";
 import { AuthenticationUserRepository } from "../modules/authentication/application/repo_impl/authentication_user_repository_impl";
 
 export default abstract class LoginWithEmailCredentialsController {
@@ -44,12 +44,16 @@ export default abstract class LoginWithEmailCredentialsController {
         code: 500,
         reason: "internal_server_error",
       });
+
     // start the session in the socket data
     client.data = authenticatedUserOrfailure.val;
-    console.log(client.data);
+    
     return client.emit(userEvents.login.response, {
       code: 200,
-      data: accessControUserOrFailure.val,
+      data: {
+        ...accessControUserOrFailure.val,
+        username: authenticatedUserOrfailure.val.username,
+      },
     });
   }
 }

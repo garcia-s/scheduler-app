@@ -1,6 +1,6 @@
 import { Err, Ok, Result } from "ts-results";
 import Failure from "../../../../core/interfaces/failure";
-import { AuthenticationUserAggregate } from "../../_domain/agregates/authentication_user_aggregate";
+import { AuthenticationUserAggregate } from "../../_domain/aggregates/authentication_user_aggregate";
 import { Password} from "../../_domain/value_objects/password";
 import { Username } from "../../../../core/value_objects/username";
 import { NewAuthenticationUserDTO } from "../dto/new_authentication_user_dto";
@@ -34,7 +34,7 @@ export class CreateAuthenticationUser {
     const savedOrfailure = await this._repository.save(
       aggregate
     );
-
+    console.log(savedOrfailure)
     if (savedOrfailure.err) {
       if (savedOrfailure.val instanceof UsernameAlreadyInUseFailure)
         return Err(new UsernameAlreadyUsedFailure());

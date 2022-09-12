@@ -5,32 +5,27 @@ import { GroupEntity } from "./access_control_group";
 
 export class UserEntity extends Entity {
   private _id: string;
-  private _username: string;
   private _accessControlGroups: GroupEntity[];
 
   private constructor(params: {
     id: string;
-    username: string;
     accessControlGroups: GroupEntity[];
   }) {
     super();
     this._id = params.id;
-    this._username = params.username;
     this._accessControlGroups = params.accessControlGroups;
   }
 
-  public static create(id: string, username: Username): UserEntity {
-    const userGroup = GroupEntity.create(username.value, []);
+  public static create(id: string): UserEntity {
+    const userGroup = GroupEntity.create(id, []);
     return new UserEntity({
       id: id,
-      username: username.value,
       accessControlGroups: [userGroup],
     });
   }
 
   public static reconstitute(params: {
     id: string;
-    username: string;
     accessControlGroups: GroupEntity[];
   }): UserEntity {
     return new UserEntity(params);
@@ -44,9 +39,7 @@ export class UserEntity extends Entity {
     return this._accessControlGroups;
   }
 
-  public get username(): string {
-    return this._username;
-  }
+
 
   public addGroups(groups: GroupEntity[]): void {
     this._accessControlGroups = [...this._accessControlGroups, ...groups];

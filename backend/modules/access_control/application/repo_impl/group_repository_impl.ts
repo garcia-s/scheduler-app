@@ -1,8 +1,8 @@
 import { Err, Ok, Result } from "ts-results";
 import { UnimplementedError } from "../../../../core/errors/general";
 import Failure from "../../../../core/interfaces/failure";
-import { GroupAggregate } from "../../_domain/agregates/access_group_aggregate";
-import GroupMap from "../mappers/access_control_group_map";
+import { GroupAggregate } from "../../_domain/aggregates/access_group_aggregate";
+import GroupMap from "../mappers/group_map";
 import {
   IGroupRepoFailure,
   IGroupRepository,
@@ -15,10 +15,10 @@ export class GroupRepository implements IGroupRepository {
   ): Promise<Result<void, IGroupRepoFailure>> {
     try {
       const model = GroupMap.fromAggregateToModel(accessControlGroup);
-      await model.save();
+      const responseModel = await model.save({transaction: true});
+
       return Ok(undefined);
     } catch (e) {
-      console.log(e);
       return Err(new DatabaseWriteFailure());
     }
   }

@@ -1,8 +1,8 @@
-import { GroupAggregate } from "../../_domain/agregates/access_group_aggregate";
+import { GroupAggregate } from "../../_domain/aggregates/access_group_aggregate";
 import { GroupEntity } from "../../_domain/entities/access_control_group";
 import NewGroupDTO from "../dto/new_group_dto";
 import GroupDTO from "../dto/role_dto";
-import GroupModel from "../models/access_control_group_model";
+import GroupModel from "../models/group_model";
 import PolicyMap from "./access_control_policy_map";
 
 export default abstract class GroupMap {

@@ -8,6 +8,7 @@
     "build": "tsc --project tsconfig.build.json",
     "dev": "nodemon ./index.ts",
     "test": "jest",
+    "devinstall": "ts-node ./install/install.ts",
     "reinstall": "ts-node ./install/reinstall.ts"
   },
   "author": "",

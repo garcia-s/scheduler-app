@@ -1,7 +1,7 @@
 import { PolicyEntity } from "../../_domain/entities/access_control_policy";
 import PolicyDTO from "../dto/policy_dto";
 import { PolicyByNameAdditionDTO } from "../dto/new_access_control_policy_dto";
-import PolicyModel from "../models/access_control_policy_model";
+import PolicyModel from "../models/policy_model";
 import NewPolicyDTO from "../dto/new_policy_dto";
 
 export default abstract class PolicyMap {

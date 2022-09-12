@@ -4,7 +4,7 @@ import { UnimplementedError } from "../../../../core/errors/general";
 import { AuthenticationUserMap } from "../mappers/authentication_user_map";
 import UserModel from "../models/user_model";
 
-import { AuthenticationUserAggregate } from "../../_domain/agregates/authentication_user_aggregate";
+import { AuthenticationUserAggregate } from "../../_domain/aggregates/authentication_user_aggregate";
 import {
   DatabaseWriteFailure,
   IAuthenticationUserRepo,
@@ -25,6 +25,7 @@ export class AuthenticationUserRepository implements IAuthenticationUserRepo {
       DomainEventEmitter.dispatchEventsForAggregate(user.id);
       return Ok(undefined);
     } catch (e) {
+      console.log(e);
       return Err(new DatabaseWriteFailure());
     }
   }

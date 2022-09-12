@@ -1,6 +1,6 @@
 import { TransportSocketClient } from "ts-transport";
-import { UserRepository } from "../modules/access_control/application/repo_impl/access_control_user_repository_impl";
-import { CreateUser } from "../modules/access_control/application/use_cases/create_access_control_user";
+import { UserRepository } from "../modules/access_control/application/repo_impl/user_repository_impl";
+import { CreateUser } from "../modules/access_control/application/use_cases/create_user";
 import { NewAuthenticationUserDTO } from "../modules/authentication/application/dto/new_authentication_user_dto";
 import { AuthenticationUserRepository } from "../modules/authentication/application/repo_impl/authentication_user_repository_impl";
 import {
@@ -8,6 +8,7 @@ import {
   PasswordValidationFailure,
   UsernameValidationFailure,
   UsernameAlreadyUsedFailure,
+  DatabaseInsertionFailure,
 } from "../modules/authentication/application/use_cases/create_authentication_user";
 import { userEvents } from "../socket-events";
 
@@ -17,16 +18,7 @@ export default abstract class SocketController {
     data: NewAuthenticationUserDTO
   ) {
     // Call the access control to check permission
-    if (typeof data.username !== "string")
-      return client.emit(userEvents.createUser.response, {
-        code: 400,
-        reason: "no_email_parameter_sent",
-      });
-    if (typeof data.password !== "string")
-      return client.emit(userEvents.createUser.response, {
-        code: 400,
-        reason: "no_password_parameter_sent",
-      });
+
     const createAuthenticationUser = new CreateAuthenticationUser(
       new AuthenticationUserRepository()
     );
@@ -35,44 +27,32 @@ export default abstract class SocketController {
     const createAuthUserOrfailure = await createAuthenticationUser.execute(
       data
     );
-
     if (createAuthUserOrfailure.err) {
-      if (createAuthUserOrfailure.val instanceof UsernameAlreadyUsedFailure)
+      if (createAuthUserOrfailure.val instanceof DatabaseInsertionFailure)
         return client.emit(userEvents.createUser.response, {
-          code: 400,
-          reason: "email_already_in_use",
-        });
-
-      if (createAuthUserOrfailure.val instanceof UsernameValidationFailure)
-        return client.emit(userEvents.createUser.response, {
-          code: 400,
-          reason: "username_validation_failed",
-        });
-
-      if (createAuthUserOrfailure.val instanceof PasswordValidationFailure)
-        return client.emit(userEvents.createUser.response, {
-          code: 400,
-          reason: "password_validation_failed",
+          code: 500,
+          reason: "database_insertion_error",
         });
 
       return client.emit(userEvents.createUser.response, {
-        code: 500,
-        reason: "database_insertion_error",
+        code: 400,
+        reason:
+          createAuthUserOrfailure.val instanceof UsernameValidationFailure
+            ? "username_validation_failed"
+            : "password_validation_failed",
       });
     }
 
     const createAccessUserOrFailure = await createAccessUser.execute({
       id: createAuthUserOrfailure.val.id,
       username: data.username,
-      groups: ["schedule_db"],
+      groups: ["admin"],
     });
-
     if (createAccessUserOrFailure.err)
       return client.emit(userEvents.createUser.response, {
         code: 500,
         reason: "unespected_server_error",
       });
-
     return client.emit(userEvents.createUser.response, {
       code: 200,
       data: createAccessUserOrFailure.val,

@@ -1,7 +1,7 @@
 import AuthenticationUserDTO from "../dto/authentication_user_dto";
 import { AuthenticationUser } from "../../_domain/entities/authentication_user";
 import UserModel from "../models/user_model";
-import { AuthenticationUserAggregate } from "../../_domain/agregates/authentication_user_aggregate";
+import { AuthenticationUserAggregate } from "../../_domain/aggregates/authentication_user_aggregate";
 
 export abstract class AuthenticationUserMap {
   public static fromEntityToDTO(user: AuthenticationUser): AuthenticationUserDTO {

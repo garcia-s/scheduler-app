@@ -1,9 +1,9 @@
 import { Err, Ok, Result } from "ts-results";
 import Failure from "../../../../core/interfaces/failure";
-import { GroupAggregate } from "../../_domain/agregates/access_group_aggregate";
+import { GroupAggregate } from "../../_domain/aggregates/access_group_aggregate";
 import NewGroupDTO from "../dto/new_group_dto";
 import GroupDTO from "../dto/role_dto";
-import GroupMap from "../mappers/access_control_group_map";
+import GroupMap from "../mappers/group_map";
 import { IGroupRepository } from "../repo_interfaces/group_repo";
 
 export class CreateGroup {

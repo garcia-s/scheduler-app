@@ -26,7 +26,7 @@ export class AuthenticationUser extends Entity {
 
   public static create(username: Username, password: Password): AuthenticationUser {
     const id = uuid();
-    const passwordSalt = crypto.randomBytes(32).toString();
+    const passwordSalt = crypto.randomBytes(128).toString('base64');
     const passwordHash = AuthenticationUser.hash(password.value, passwordSalt);
     return new AuthenticationUser({
       id,
@@ -46,7 +46,7 @@ export class AuthenticationUser extends Entity {
   }
 
   private static hash(password: string, salt: string): string {
-    return crypto.pbkdf2Sync(password, salt, 1000, 256, "sha512").toString();
+    return crypto.pbkdf2Sync(password, salt, 1000, 512, "sha512").toString('base64');
   }
 
 
