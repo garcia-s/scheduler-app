@@ -8,6 +8,7 @@ import UserMap from "../mappers/access_control_user_map";
 import { IUserRepository } from "../repo_interfaces/user_repo";
 
 export class CreateUser {
+  
   accessControlUserRepository: IUserRepository;
 
   constructor(accessControlUserRepository: IUserRepository) {

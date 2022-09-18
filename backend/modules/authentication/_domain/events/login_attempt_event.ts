@@ -25,3 +25,4 @@ export default class LoginAttemptEvent extends IDomainEvent {
         return this._success
     }
 }
+
