@@ -1,7 +1,9 @@
 import { Entity } from "../../../../core/interfaces/entity";
 
 
-export class ServiceEntity extends Entity {
+
+
+export class ServiceProviderEntity extends Entity {
     private _id: string;
 
 

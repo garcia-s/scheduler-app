@@ -46,7 +46,7 @@ export default abstract class SocketController {
     const createAccessUserOrFailure = await createAccessUser.execute({
       id: createAuthUserOrfailure.val.id,
       username: data.username,
-      groups: ["admin"],
+      groups: ["superuser"],
     });
     if (createAccessUserOrFailure.err)
       return client.emit(userEvents.createUser.response, {
