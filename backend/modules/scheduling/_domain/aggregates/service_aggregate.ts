@@ -42,8 +42,8 @@ export default class ServiceAggregate extends Aggregate<ServiceEntity> {
     throw new UnimplementedError()
   }
 
-  scheduleAppoitment(appointment: string): void {
-    throw new UnimplementedError()
+  scheduleAppointment(appointment: string): void {
+    
   }
 
   rescheduleAppointment(): void {

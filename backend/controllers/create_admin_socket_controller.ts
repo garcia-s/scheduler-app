@@ -5,9 +5,7 @@ import { NewAuthenticationUserDTO } from "../modules/authentication/application/
 import { AuthenticationUserRepository } from "../modules/authentication/application/repo_impl/authentication_user_repository_impl";
 import {
   CreateAuthenticationUser,
-  PasswordValidationFailure,
   UsernameValidationFailure,
-  UsernameAlreadyUsedFailure,
   DatabaseInsertionFailure,
 } from "../modules/authentication/application/use_cases/create_authentication_user";
 import { userEvents } from "../socket-events";
