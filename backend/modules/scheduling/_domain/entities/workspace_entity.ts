@@ -35,10 +35,7 @@ export class WorkspaceEntity extends Entity {
       schedule: [],
     });
   }
-  
-  public addAppointment(appointment: AppointmentEntity) {
-    this._schedule.push(appointment);
-  }
+
 
   isAvailable(startDate:Date, endDate:Date):boolean {
       throw new UnimplementedError()
