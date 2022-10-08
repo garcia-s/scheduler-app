@@ -1,11 +1,27 @@
-import { Result } from "ts-results";
+import { Err, Result } from "ts-results";
 import { UnimplementedError } from "../../../../core/errors/general";
 import { IDomainFailure } from "../../../../core/failures/interfaces";
 import Aggregate from "../../../../core/interfaces/aggregate";
+import { IDomainEvent } from "../../../../core/interfaces/domain_event";
 import { ServiceEntity } from "../entities/service_entity";
 import { ServiceProviderEntity } from "../entities/service_provider_entity";
 import { WorkspaceEntity } from "../entities/workspace_entity";
 import { AppointmentRequest } from "../value_objects/appointment_request";
+
+export interface IAppointmentScheduleFailure {}
+
+/**
+ * @class
+ * Returned when attempting to create an appointment that doesn't have a service privider available
+ */
+export class NoServiceProviderAvailable
+  implements IAppointmentScheduleFailure {}
+
+/**
+ * @class
+ * Returned when attempting to create an appointment that doesn't have a workspace available
+ */
+export class NoWorkspaceAvailable implements IAppointmentScheduleFailure {}
 
 export default class ServiceAggregate extends Aggregate<ServiceEntity> {
   private _serviceProviders: ServiceProviderEntity[];
@@ -44,9 +60,15 @@ export default class ServiceAggregate extends Aggregate<ServiceEntity> {
   public removeServiceProvider(): void {
     throw new UnimplementedError();
   }
-  
-  public scheduleAppointment(request: AppointmentRequest): Result<void, IDomainFailure> {
-    
+
+  public scheduleAppointment(
+    request: AppointmentRequest
+  ): Result<void, IAppointmentScheduleFailure> {
+    const providerOrFailure = this.findAvailableServiceProvider(request);
+    if (providerOrFailure.err) return Err(new NoServiceProviderAvailable());
+
+    const workspaceOrFailure = this.findAvailableWorkspace(request);
+    if (workspaceOrFailure) return Err(new NoWorkspaceAvailable());
   }
 
   public rescheduleAppointment(
@@ -56,5 +78,17 @@ export default class ServiceAggregate extends Aggregate<ServiceEntity> {
     throw new UnimplementedError();
   }
 
-  private findAvailableServiceProvider(): Result<ServiceProviderEntity, IDomainFailure> {}
+  private findAvailableServiceProvider(
+    request: AppointmentRequest
+  ): Result<ServiceProviderEntity, NoServiceProviderAvailable> {
+    for(let i = 0; i < this._serviceProviders.length ; i++) {
+      
+    }
+  }
+
+  private findAvailableWorkspace(
+    request: AppointmentRequest
+  ): Result<WorkspaceEntity, IDomainFailure> {
+    throw UnimplementedError;
+  }
 }
