@@ -2,6 +2,7 @@ import { Entity } from "../../../../core/interfaces/entity";
 import { AppointmentEntity } from "./appointment_entity";
 import { v4 as uuid } from "uuid";
 import { UnimplementedError } from "../../../../core/errors/general";
+import { Timeframe } from "../value_objects/timeframe";
 export class WorkspaceEntity extends Entity {
   private _id: string;
   private _name: string;
@@ -36,8 +37,7 @@ export class WorkspaceEntity extends Entity {
     });
   }
 
-
-  isAvailable(startDate:Date, endDate:Date):boolean {
-      throw new UnimplementedError()
+  isAvailable(timeFrame: Timeframe): boolean {
+    throw new UnimplementedError();
   }
 }

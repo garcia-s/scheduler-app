@@ -1,22 +1,24 @@
 import ValueObject from "../../../../core/interfaces/value_object";
 import { Timeframe } from "./timeframe";
 
-export type IAppointmentRequestParams = {
+export type IAppointmentRescheduleRequestParams = {
+  appointmentId: string;
   timeFrame: Timeframe;
   clientId: string;
   providerId?: string;
 };
 
-export class AppointmentRequest extends ValueObject<IAppointmentRequestParams> {
-  private constructor(params: IAppointmentRequestParams) {
+export class AppointmentRescheduleRequest extends ValueObject<IAppointmentRescheduleRequestParams> {
+  private constructor(params: IAppointmentRescheduleRequestParams) {
     super(params);
   }
 
-  create(params: IAppointmentRequestParams): AppointmentRequest {
-    return new AppointmentRequest(params);
+  create(
+    params: IAppointmentRescheduleRequestParams
+  ): AppointmentRescheduleRequest {
+    return new AppointmentRescheduleRequest(params);
   }
 
-  
   get timeFrame(): Timeframe {
     return this._value.timeFrame;
   }

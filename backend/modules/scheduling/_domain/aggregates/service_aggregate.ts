@@ -1,14 +1,18 @@
-import { Err, Result } from "ts-results";
+import { Err, Ok, Result } from "ts-results";
 import { UnimplementedError } from "../../../../core/errors/general";
 import { IDomainFailure } from "../../../../core/failures/interfaces";
 import Aggregate from "../../../../core/interfaces/aggregate";
 import { IDomainEvent } from "../../../../core/interfaces/domain_event";
+import {
+  AppointmentEntity,
+  AppointmentStatus,
+} from "../entities/appointment_entity";
 import { ServiceEntity } from "../entities/service_entity";
 import { ServiceProviderEntity } from "../entities/service_provider_entity";
 import { WorkspaceEntity } from "../entities/workspace_entity";
 import { AppointmentRequest } from "../value_objects/appointment_request";
 
-export interface IAppointmentScheduleFailure {}
+interface IAppointmentScheduleFailure {}
 
 /**
  * @class
@@ -25,14 +29,23 @@ export class NoServiceProviderAvailable
  */
 export class NoWorkspaceAvailable implements IAppointmentScheduleFailure {}
 
+export class AppointmentNotFoundFailure {}
+
+
+
+interface IAppointmentRescheduleFailure {}
+
+
 export default class ServiceAggregate extends Aggregate<ServiceEntity> {
   private _serviceProviders: ServiceProviderEntity[];
   private _workSpaces: WorkspaceEntity[];
+  private _appointments: AppointmentEntity[];
 
   constructor(params: {
     service: ServiceEntity;
     serviceProviders: ServiceProviderEntity[];
     workSpaces: WorkspaceEntity[];
+    appointments: [];
   }) {
     super(params.service);
     this._serviceProviders = params.serviceProviders;
@@ -43,7 +56,7 @@ export default class ServiceAggregate extends Aggregate<ServiceEntity> {
     throw new UnimplementedError();
   }
 
-  public static reconstitue() {
+  public static reconstitute() {
     throw new UnimplementedError();
   }
 
@@ -63,34 +76,82 @@ export default class ServiceAggregate extends Aggregate<ServiceEntity> {
     throw new UnimplementedError();
   }
 
+  /**
+   *
+   * @public method
+   * @returns a new appointment when it has an available service provider and workspace.
+   *
+   */
   public scheduleAppointment(
     request: AppointmentRequest
-  ): Result<void, IAppointmentScheduleFailure> {
+  ): Result<AppointmentEntity, IAppointmentScheduleFailure> {
     const providerOrFailure = this.findAvailableServiceProvider(request);
     if (providerOrFailure.err) return Err(new NoServiceProviderAvailable());
 
     const workspaceOrFailure = this.findAvailableWorkspace(request);
-    if (workspaceOrFailure) return Err(new NoWorkspaceAvailable());
+    if (workspaceOrFailure.err) return Err(new NoWorkspaceAvailable());
+
+    const appointment = AppointmentEntity.create({
+      clientId: request.clientId,
+      timeframe: request.timeFrame,
+      serviceProviderId: providerOrFailure.val.id,
+      workspaceId: workspaceOrFailure.val.id,
+      status: AppointmentStatus.scheduled,
+    });
+
+    this._appointments.push(appointment);
+    return Ok(appointment);
   }
 
-  public rescheduleAppointment(
-    request: AppointmentRequest,
-    appointmentId: string
-  ): void {
-    throw new UnimplementedError();
+  public rescheduleAppointment(params: {
+    appointmentId: string;
+    timeframe: string;
+
+  }): Result<AppointmentEntity, IAppointmentRescheduleFailure> {
+    const appointmentOrFailure = this.findAppointmentbyId();
+    throw UnimplementedError;
   }
 
+  /**
+   * @private method
+   * @returns  an available service provider or returns a NoServiceProvierAvailable failure.
+   * If a providerId is given to the request should match the id with the provider and check if it's available.
+   * Might need refactoring to balance the load of appointments to the least scheduled service providers.
+   */
   private findAvailableServiceProvider(
     request: AppointmentRequest
   ): Result<ServiceProviderEntity, NoServiceProviderAvailable> {
-    for(let i = 0; i < this._serviceProviders.length ; i++) {
-      if(this._serviceProviders[i].isAvailable())
+    for (let i = 0; i < this._serviceProviders.length; i++) {
+      if (
+        request.providerId &&
+        request.providerId !== this._serviceProviders[i].id
+      )
+        continue;
+
+      if (this._serviceProviders[i].isAvailable(request.timeFrame))
+        return Ok(this._serviceProviders[i]);
     }
+    return Err(new NoServiceProviderAvailable());
   }
 
+  /**
+   * @private
+   * Finds an available workspace or returns a NoWorkspaceAvailable failure.
+   */
   private findAvailableWorkspace(
     request: AppointmentRequest
-  ): Result<WorkspaceEntity, IDomainFailure> {
+  ): Result<WorkspaceEntity, NoWorkspaceAvailable> {
+    for (let i = 0; i < this._workSpaces.length; i++) {
+      if (this._workSpaces[i].isAvailable(request.timeFrame))
+        return Ok(this._workSpaces[i]);
+    }
+    return Err(new NoWorkspaceAvailable());
+  }
+
+  private findAppointmentbyId(): Result<
+    AppointmentEntity,
+    AppointmentNotFoundFailure
+  > {
     throw UnimplementedError;
   }
 }
