@@ -6,6 +6,7 @@ import { PhoneNumber } from "../value_objects/phone_number";
 import { AppointmentEntity } from "./appointment_entity";
 import { v4 as uuid } from "uuid";
 import { UnimplementedError } from "../../../../core/errors/general";
+import { Timeframe } from "../value_objects/timeframe";
 
 export class ServiceProviderEntity extends Entity {
   private _id: string;
@@ -56,13 +57,11 @@ export class ServiceProviderEntity extends Entity {
     return new ServiceProviderEntity(params);
   }
 
-  isAvailable(startDate: Date, endDate: Date): boolean {
+  isAvailable(timeFrame: Timeframe): boolean {
     throw new UnimplementedError();
   }
-
 
   public addAppointment(appointment: AppointmentEntity) {
     this._schedule.push(appointment);
   }
-
 }

@@ -12,14 +12,16 @@ export interface IAppointmentScheduleFailure {}
 
 /**
  * @class
- * Returned when attempting to create an appointment that doesn't have a service privider available
+ * Returned when attempting to create an appointment that doesn't have a service privider available.
+ * It's also returned by the findAvailableServiceProvider private method
  */
 export class NoServiceProviderAvailable
   implements IAppointmentScheduleFailure {}
 
 /**
  * @class
- * Returned when attempting to create an appointment that doesn't have a workspace available
+ * Returned when attempting to create an appointment that doesn't have a workspace available.
+ * It's also returned by the findAvailableWorkspae private method
  */
 export class NoWorkspaceAvailable implements IAppointmentScheduleFailure {}
 
@@ -82,7 +84,7 @@ export default class ServiceAggregate extends Aggregate<ServiceEntity> {
     request: AppointmentRequest
   ): Result<ServiceProviderEntity, NoServiceProviderAvailable> {
     for(let i = 0; i < this._serviceProviders.length ; i++) {
-      
+      if(this._serviceProviders[i].isAvailable())
     }
   }
 
