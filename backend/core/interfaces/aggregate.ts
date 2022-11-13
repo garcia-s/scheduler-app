@@ -3,28 +3,19 @@ import { IDomainEvent } from "./domain_event";
 import { Entity } from "./entity";
 import { DomainEventEmitter } from "./domain_event_emitter";
 
-export default abstract class Aggregate<R extends Entity> {
-  private _root: R;
+export default abstract class Aggregate extends Entity {
   private _domainEvents: IDomainEvent[] = [];
 
-  protected constructor(root: R) {
-    this._root = root;
-  }
-
-  get root(): R {
-    return this._root;
-  }
-
-  get id(): string {
-    return this._root.id
+  protected constructor(id: string) {
+    super(id);
   }
 
   get domainEvents(): IDomainEvent[] {
     return this._domainEvents;
   }
 
-  equals(aggregate: Aggregate<any>): boolean {
-    return this._root.equals(aggregate.root)
+  equals(aggregate: Aggregate ): boolean {
+    return this._id === aggregate.id;
   }
 
   protected addDomainEvent(domainEvent: IDomainEvent): void {
@@ -36,7 +27,7 @@ export default abstract class Aggregate<R extends Entity> {
     this._domainEvents.splice(0, this._domainEvents.length);
   }
 
-  protected dispatchEventForAggregate() {
-    DomainEventEmitter.dispatchEventsForAggregate(this.root.id);
+  protected dispatchEventsForAggregate() {
+    DomainEventEmitter.dispatchEventsForAggregate(this.id);
   }
 }

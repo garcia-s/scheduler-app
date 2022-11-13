@@ -4,4 +4,6 @@ export default abstract class ValueObject<T> {
   constructor(value: T) {
     this._value = value;
   }
+
+  abstract equals(object: ValueObject<T>): boolean;
 }

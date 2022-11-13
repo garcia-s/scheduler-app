@@ -2,25 +2,30 @@ import { UnimplementedError } from "../../../../core/errors/general";
 import AggregateRoot from "../../../../core/interfaces/aggregate";
 import { GroupEntity } from "../entities/access_control_group";
 import { PolicyEntity } from "../entities/access_control_policy";
-import { UserEntity } from "../entities/access_control_user";
 import { AddedPolicyToGroupEvent } from "../events/added_policy_to_group_event";
+import { v4 as uuid } from "uuid";
 
-export interface IGroupAggregateParams {
-  _users: UserEntity[];
-}
+export class GroupAggregate extends AggregateRoot {
+  private _policies: PolicyEntity[];
+  private _userIds: string[];
 
-export class GroupAggregate extends AggregateRoot<GroupEntity> {
-  private constructor(root: GroupEntity) {
-    super(root);
+  private constructor(params: {
+    id: string;
+    name: string;
+    userIds: string[];
+    policies: PolicyEntity[];
+  }) {
+    super(params.id);
+    this._policies = params.policies;
+    this._userIds = params.userIds;
   }
 
-  public static create(name: string, policies: PolicyEntity[]): GroupAggregate {
-    return new GroupAggregate(GroupEntity.create(name, policies));
+  public static create(name: string): GroupAggregate {
+    return new GroupAggregate({ id: uuid(), name, policies: [], userIds: [] });
   }
 
   addPolicy(policy: PolicyEntity) {
-    this.root.addPolicy(policy);
-    this.addDomainEvent(new AddedPolicyToGroupEvent(this.root.id, policy));
+    this.addDomainEvent(new AddedPolicyToGroupEvent(this.id, policy));
   }
 
   removePolicy() {
@@ -28,6 +33,6 @@ export class GroupAggregate extends AggregateRoot<GroupEntity> {
   }
 
   get policies(): PolicyEntity[] {
-    return this.root.policies;
+    return this._policies;
   }
 }

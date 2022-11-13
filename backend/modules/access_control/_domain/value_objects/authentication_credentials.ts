@@ -1,13 +1,10 @@
 import { Result } from "ts-results";
-import { string } from "../../../../core/domain/value_objects/email";
-import { UnimplementedError } from "../../../../core/errors/general";
 import Failure from "../../../../core/interfaces/failure";
 import ValueObject from "../../../../core/interfaces/value_object";
-import { PasswordHash } from "../../../authentication/_domain/value_objects/password";
 
 interface IEmailAuthCredentialProps {
   email: string;
-  password: PasswordHash;
+  password: string;
 }
 
 export class EmailAuthenticationCredentialsFailure extends Failure {}
@@ -17,7 +14,7 @@ export class EmailAuthenticationCredentials extends ValueObject<IEmailAuthCreden
     return this._value.email;
   }
 
-  get password(): PasswordHash {
+  get password(): string {
     return this._value.password;
   }
 

@@ -1,11 +1,11 @@
 import { request } from "express";
+import { UnimplementedError } from "../../../../core/errors/general";
 import ValueObject from "../../../../core/interfaces/value_object";
+import { AccessRequestAttribute } from "./request_attribute";
 
 export type AccessRequestParams = {
     action: string,
-    objectOwner: string,
-    objectId: string,
-    objectType: string,
+    attributes: AccessRequestAttribute[];
 }
 
 export class AccessRequest extends ValueObject<AccessRequestParams>{
@@ -15,7 +15,7 @@ export class AccessRequest extends ValueObject<AccessRequestParams>{
         super(params)
     }
     
-    public static create(params: AccessRequestParams) {
+    public static create(params: AccessRequestParams): AccessRequest {
         return new AccessRequest(params);
     }
 
@@ -23,15 +23,12 @@ export class AccessRequest extends ValueObject<AccessRequestParams>{
         return this._value.action
     }
 
-    get objectOwner(): string {
-        return this._value.objectOwner
+    get attributes(): AccessRequestAttribute[] {
+        return this._value.attributes;
     }
 
-    get objectId(): string {
-        return this._value.objectId
-    }
-
-    get objectType(): string {
-        return this._value.objectType
-    }
+    
+    equals(object: ValueObject<AccessRequestParams>): boolean {
+        throw new UnimplementedError();
+    }    
 }

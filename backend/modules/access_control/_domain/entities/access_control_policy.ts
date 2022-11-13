@@ -3,6 +3,8 @@ import { Entity } from "../../../../core/interfaces/entity";
 import Failure from "../../../../core/interfaces/failure";
 import { AccessRequest } from "../value_objects/access_request";
 import { v4 as uuid } from "uuid";
+import { PolicyAttribute } from "../value_objects/policy_attribute";
+import { UnimplementedError } from "../../../../core/errors/general";
 
 // Policies should have:
 //
@@ -25,9 +27,7 @@ export type ObjectID = string | ObjectIDSelector;
 
 export type PolicyEntityCreationParams = {
   action: string;
-  objectType: string;
-  objectOwner: ObjectOwnerID;
-  objectId: ObjectID;
+  attributes: PolicyAttribute[];
 };
 
 export type PolicyEntityReconstitutionParams = PolicyEntityCreationParams & {
@@ -36,26 +36,19 @@ export type PolicyEntityReconstitutionParams = PolicyEntityCreationParams & {
 
 export type PolicyEntityParams = {};
 export class PolicyEntity extends Entity {
-  private _id: string;
   private _action: string;
-  private _objectType: string;
-  private _objectOwner: ObjectOwnerID;
-  private _objectId: ObjectID;
+  private _attributes: PolicyAttribute[];
 
   //Contructor and factories
   private constructor(params: {
     id: string;
     action: string;
-    objectType: string;
-    objectOwner: ObjectOwnerID;
-    objectId: ObjectID;
+    attributes: PolicyAttribute[];
   }) {
-    super();
+    super(params.id);
     this._id = params.id;
     this._action = params.action;
-    this._objectType = params.objectType;
-    this._objectOwner = params.objectOwner;
-    this._objectId = params.objectId;
+    this._attributes = params.attributes;
   }
 
   public static create(params: PolicyEntityCreationParams): PolicyEntity {
@@ -74,28 +67,24 @@ export class PolicyEntity extends Entity {
     return this._action;
   }
 
-  get objectType(): string {
-    return this._objectType;
-  }
-
-  get objectOwner(): string {
-    return this._objectOwner;
-  }
-
-  get objectId(): string {
-    return this._objectId;
+  get attributes(): PolicyAttribute[] {
+    return this._attributes;
   }
 
   // behavior
   hasAccess(userId: string, request: AccessRequest): boolean {
-    return (
-      (request.action === this.action || this.action === "*") &&
-      (request.objectType === this.objectType || this.objectType == "*") &&
-      (request.objectOwner === this.objectOwner ||
-        this.objectOwner === "*" ||
-        (this.objectOwner === "!" && request.objectOwner === userId)) &&
-      (request.objectId === this.objectId || this.objectId === "*")
-    );
+    if (request.attributes.length !== this.attributes.length) return false;
+
+    for (let i = 0; i < request.attributes.length; i++) {
+      let foundAttribute = false;
+
+      for (let j = 0; j < this.attributes.length; j++) {
+        if (this.attributes[j].hasAccess(request.attributes[i]))
+          foundAttribute = true;
+      }
+      if (!foundAttribute) return false;
+    }
+    return true;
   }
 }
 

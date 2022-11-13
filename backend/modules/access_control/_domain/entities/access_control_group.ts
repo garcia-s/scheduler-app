@@ -1,24 +1,18 @@
-import { Ok, Result } from "ts-results";
+
 import { UnimplementedError } from "../../../../core/errors/general";
 import { Entity } from "../../../../core/interfaces/entity";
 import { AccessRequest } from "../value_objects/access_request";
 import { PolicyEntity } from "./access_control_policy";
 
 export class GroupEntity extends Entity {
-  private _id: string;
   private _policies: PolicyEntity[];
-
-  get id(): string {
-    return this._id;
-  }
 
   get policies(): PolicyEntity[] {
     return this._policies;
   }
 
   private constructor(id: string, policies: PolicyEntity[]) {
-    super();
-    this._id = id;
+    super(id);
     this._policies = policies;
   }
 

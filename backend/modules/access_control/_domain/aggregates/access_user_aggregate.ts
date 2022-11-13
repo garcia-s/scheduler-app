@@ -1,47 +1,53 @@
+
 import Aggregate from "../../../../core/interfaces/aggregate";
 import Failure from "../../../../core/interfaces/failure";
-import { Username } from "../../../../core/value_objects/username";
 import { GroupEntity } from "../entities/access_control_group";
-import { UserEntity } from "../entities/access_control_user";
 import AccessRequestEvent from "../events/access_request_event";
 import AddedGroupsToUserEvent from "../events/added_group_to_user_event";
 import { AccessRequest } from "../value_objects/access_request";
 
-export class UserAggregate extends Aggregate<UserEntity> {
-  private constructor(root: UserEntity) {
-    super(root);
+export class UserAggregate extends Aggregate {
+
+  private _accessControlGroups: GroupEntity[];
+  private constructor(params: {
+    id: string;
+    accessControlGroups: GroupEntity[];
+  }) {
+    super(params.id);
+    this._accessControlGroups = params.accessControlGroups;
   }
 
   public get groups(): GroupEntity[] {
-    return this.root.groups;
+    return this._accessControlGroups;
   }
 
   // Creation factory
   public static create(id: string): UserAggregate {
-    const root = UserEntity.create(id);
-    return new UserAggregate(root);
+    return new UserAggregate({id, accessControlGroups: []});
   }
 
   public static reconstitute(params: {
     id: string;
     accessControlGroups: GroupEntity[];
   }): UserAggregate {
-    const root = UserEntity.reconstitute(params);
-    return new UserAggregate(root);
+    return new UserAggregate(params);
   }
 
   public addGroups(groups: GroupEntity[]): void {
-    this.root.addGroups(groups);
+    
     this.addDomainEvent(
-      new AddedGroupsToUserEvent(this.root.id, this.root.groups)
+      new AddedGroupsToUserEvent(this.id, this.groups)
     );
   }
 
   public hasAccess(request: AccessRequest): boolean {
-    const access = this.root.hasAccess(request);
-    this.addDomainEvent(new AccessRequestEvent(this.root.id, request));
-    this.dispatchEventForAggregate();
-    return access;
+    let hasAccess = false
+    for (let i = 0; i < this.groups.length; i++) {
+      if (this.groups[i].hasAccess(this._id, request)) hasAccess = true;
+    }
+    this.addDomainEvent(new AccessRequestEvent(this.id, request));
+    this.dispatchEventsForAggregate();
+    return hasAccess;
   }
 }
 
