@@ -1,11 +1,11 @@
 import { IDomainEvent } from "../../../../core/interfaces/domain_event";
 
-export default class CreatedUserEvent extends IDomainEvent {
+export default class ChangedPasswordEvent extends IDomainEvent {
   private _userId: string;
 
-  constructor(id: string) {
+  constructor(userId: string) {
     super();
-    this._userId;
+    this._userId = userId;
   }
 
   get userId(): string {

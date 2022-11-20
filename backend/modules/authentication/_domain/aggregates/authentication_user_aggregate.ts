@@ -1,64 +1,93 @@
 import Aggregate from "../../../../core/interfaces/aggregate";
 import Failure from "../../../../core/interfaces/failure";
-import { AuthenticationUser } from "../entities/authentication_user";
-import CreatedUserEvent from "../events/created_user_event";
-import LoginAttemptEvent from "../events/login_attempt_event";
 import { Password } from "../value_objects/password";
 import { Username } from "../../../../core/value_objects/username";
+import { v4 as uuid } from "uuid";
+import CreatedUserEvent from "../events/created_user_event";
+import { UnimplementedError } from "../../../../core/errors/general";
+import LoginAttemptEvent from "../events/login_attempt_event";
+import { DomainEventEmitter } from "../../../../core/interfaces/domain_event_emitter";
+import ChangedPasswordEvent from "../events/changed_password_event";
 
-export class AuthenticationUserAggregate extends Aggregate<AuthenticationUser> {
-  private constructor(root: AuthenticationUser) {
-    super(root);
+export class WrongPreviousPassword extends Failure {}
+
+export class AuthenticationUserAggregate extends Aggregate {
+  private _username: string;
+  private _password: Password;
+  private _recoveryToken: RecoveryToken
+
+  private constructor(params: {
+    id: string;
+    username: string;
+    password: Password;
+  }) {
+    super(params.id);
+    this._username = params.username;
+    this._password = params.password;
   }
 
   public static create(
     username: Username,
     password: Password
   ): AuthenticationUserAggregate {
-    const user = AuthenticationUser.create(username, password);
-    const instance = new AuthenticationUserAggregate(user);
-    instance.addDomainEvent(new CreatedUserEvent(user));
+    const id = uuid();
+    const instance = new AuthenticationUserAggregate({
+      id,
+      username: username.value,
+      password: password,
+    });
+    instance.addDomainEvent(new CreatedUserEvent(id));
     return instance;
   }
 
-  public static recostitute(params: {
+  public static reconstitute(params: {
     id: string;
     username: string;
-    passwordHash: string;
-    passwordSalt: string;
+    password: Password;
   }): AuthenticationUserAggregate {
-    return new AuthenticationUserAggregate(
-      AuthenticationUser.reconstitute(params)
+    return new AuthenticationUserAggregate(params);
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  get username(): string {
+    return this._username;
+  }
+
+  get passwordHash(): string {
+    return this._password.passwordHash;
+  }
+
+  get passwordSalt(): string {
+    return this._password.passwordSalt;
+  }
+
+  get encryptionCycles(): number {
+    return this._password.encryptionCycles;
+  }
+
+  /// Behavior
+  changePassword(previousPassword: string, newPassword: Password): boolean {
+    if (!this._password.passwordMatch(previousPassword)) return false;
+    this._password = newPassword;
+    this.addDomainEvent(new ChangedPasswordEvent(this.id));
+    return true;
+  }
+
+  authenticate(password: string): boolean {
+    const match = this._password.passwordMatch(password);
+    this.addDomainEvent(
+      new LoginAttemptEvent({
+        id: this.id,
+        username: this.username,
+        success: match,
+      })
     );
+    DomainEventEmitter.markAggregateForDispatch(this);
+    return match;
   }
 
-
-  public get username(): string {
-    return this.root.username;
-  }
-
-  public get passwordHash(): string {
-    return this.root.passwordHash
-  }
-
-  public get passwordSalt(): string {
-    return this.root.passwordSalt;
-  }
-
-  //Behavior
-
-  public passwordMatch(password: string):boolean {
-    const result = this.root.passwordMatch(password);
-    this.addDomainEvent(new LoginAttemptEvent(
-      this.id,
-      this.username,
-      result
-    ))
-    this.dispatchEventForAggregate()
-    return result
-  }
+  initializeRecoveryProcess() {}
 }
-
-export abstract class IAuthenticationUserAggregateFailure extends Failure {}
-
-export class InvalidAuthenticationUserEntity extends IAuthenticationUserAggregateFailure {}
