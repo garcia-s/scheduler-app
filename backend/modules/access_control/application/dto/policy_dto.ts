@@ -1,7 +1,7 @@
+import { PolicyAttributeDTO } from "./policy_attribute_dto";
+
 export default interface PolicyDTO {
   id: string,
   action: string,
-  objectId: string,
-  objectOwner: string,
-  objectType: string,
+  attributes: PolicyAttributeDTO[]
 } 

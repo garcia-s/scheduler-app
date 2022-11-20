@@ -1,6 +1,7 @@
 import { text } from "express";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import GroupModel from "./group_model";
+import PolicyAttributeModel from "./policy_attribute_model";
 
 @Entity("access_policy")
 export default class PolicyModel extends BaseEntity {
@@ -11,15 +12,10 @@ export default class PolicyModel extends BaseEntity {
   @Column({type:"varchar", length:6})
   action: string;
 
-  @Column({type: 'varchar', length: 30})
-  objectType: string;
-
-  @Column({type: 'text'})
-  objectOwner: string;
-
-  @Column({type:'text'})
-  objectId: string;
 
   @ManyToOne(() => GroupModel, (group) => group.policies)
   group: GroupModel
+
+  @OneToMany(() => PolicyAttributeModel, (attribute) => attribute.policy)
+  attributes: PolicyAttributeModel[]
 }

@@ -23,10 +23,7 @@ export default abstract class GroupMap {
   }
 
   public static fromCreationalDTOToAggregate(dto: NewGroupDTO) {
-    return GroupAggregate.create(
-      dto.name,
-      dto.policies.map((policyDTO) => PolicyMap.fromDTOtoEntity(policyDTO))
-    );
+    return GroupAggregate.create(dto.name);
   }
 
   public static fromEntityToModel(entity: GroupEntity): GroupModel {

@@ -18,7 +18,7 @@ export class PolicyAttribute extends ValueObject<IPolicyAttributeParams> {
     params: IPolicyAttributeParams
   ): Result<PolicyAttribute, DomainObjectValidationFailure> {
     if (
-      params.name != null ||
+      params.name == null ||
       params.name == "" ||
       params.value == null ||
       params.value == ""
@@ -26,6 +26,16 @@ export class PolicyAttribute extends ValueObject<IPolicyAttributeParams> {
       return Err(new DomainObjectValidationFailure());
 
     return Ok(new PolicyAttribute(params));
+  }
+
+  public static reconstitute(params: {
+    name: string;
+    value: string;
+  }): PolicyAttribute {
+    return new PolicyAttribute({
+      name: params.name.toLowerCase(),
+      value: params.value.toLowerCase(),
+    });
   }
 
   get name(): string {

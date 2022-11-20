@@ -27,6 +27,10 @@ export class Username extends ValueObject<string> {
     get value(): string  {
       return this._value;
     }
+
+    equals(object: Username): boolean {
+      return this.value == object.value;
+    }
   
   }
   

@@ -1,4 +1,2 @@
 
-export abstract class IDomainEvent {
-  abstract get aggregateId(): string;
-}
+export abstract class IDomainEvent {}

@@ -21,7 +21,9 @@ export class GroupAggregate extends AggregateRoot {
   }
 
   public static create(name: string): GroupAggregate {
-    return new GroupAggregate({ id: uuid(), name, policies: [], userIds: [] });
+    const instance = new GroupAggregate({ id: uuid(), name, policies: [], userIds: [] });
+    instance.addDomainEvent();                            
+    return instance; 
   }
 
   addPolicy(policy: PolicyEntity) {

@@ -1,92 +1,104 @@
 import { PolicyEntity } from "../../../../../modules/access_control/_domain/entities/access_control_policy";
+import { PolicyAttribute } from "../../../../../modules/access_control/_domain/value_objects/policy_attribute";
+import { AccessRequestAttribute } from "../../../../../modules/access_control/_domain/value_objects/request_attribute";
 import { AccessRequest } from "../../../../../modules/authentication/_domain/value_objects/access_request";
 
 describe("Test for access control policy entity", () => {
-  const baseRequest = {
-    action: "borrar",
-    objectOwner: "22",
-    objectId: "1",
-    objectType: "verde",
-  };
+  const policyAttributes: PolicyAttribute[] = [
+    PolicyAttribute.reconstitute({ name: "attribute1", value: "attribute1" }),
+    PolicyAttribute.reconstitute({ name: "attribute2", value: "attribute2" }),
+    PolicyAttribute.reconstitute({ name: "attribute3", value: "attribute3" }),
+  ];
 
-  test("Has access for user when everything is wildcard", () => {
-    const policy = PolicyEntity.create({
-      action: "*",
-      objectId: "*",
-      objectType: "*",
-      objectOwner: "*",
-    });
-    const request = AccessRequest.create(baseRequest);
-    const access = policy.hasAccess("fake", request);
-    expect(access).toBeTruthy();
-  });
-
-  test("User has access when the action is specified but doesnt when the action is wrong", () => {
-    const policy = PolicyEntity.create({
+  const requestAttributes: AccessRequestAttribute[] = [
+    AccessRequestAttribute.create({ name: "attribute1", value: "attribute1" }),
+    AccessRequestAttribute.create({ name: "attribute2", value: "attribute2" }),
+    AccessRequestAttribute.create({ name: "attribute3", value: "attribute3" }),
+  ];
+  test("Returns true if the policy attributes and the access attributes match", () => {
+    //Arrange
+    const policy = PolicyEntity.reconstitute({
+      id: "fakeId",
       action: "create",
-      objectId: "*",
-      objectType: "*",
-      objectOwner: "*",
+      attributes: policyAttributes,
     });
-    const truthyRequest = AccessRequest.create({
-      ...baseRequest,
-      action: "create",
-    });
-    const falsyRequest = AccessRequest.create({
-      ...baseRequest,
-      action: "notAnAction",
-    });
-    const truthy = policy.hasAccess("fake", truthyRequest);
-    const falsy = policy.hasAccess("fake", falsyRequest);
-    expect(truthy).toBeTruthy();
-    expect(falsy).toBeFalsy();
-  });
 
-
-  test("Has access when objectId is equal to the request objectId", () => {
-    const policy = PolicyEntity.create({
-      action: "*",
-      objectId: "33",
-      objectType: "*",
-      objectOwner: "*",
-    });
-    const request = AccessRequest.create({ ...baseRequest, objectId: "33" });
-    const access = policy.hasAccess("fake", request);
-    expect(access).toBeTruthy();
-  });
-
-
-  test("Has access when objectOwner is self and the user matches with the of the request for the request", () => {
-    const policy = PolicyEntity.create({
-      action: "*",
-      objectId: "*",
-      objectType: "*",
-      objectOwner: "!",
-    });
-    const request = AccessRequest.create({
-      ...baseRequest,
-      objectId: "33",
-      objectOwner: "333",
-    });
-    const access = policy.hasAccess("333", request);
-    expect(access).toBeTruthy();
-  });
-
-
-  test("Has access when request matches", () => {
-    const policy = PolicyEntity.create({
-      action: "create",
-      objectId: "objectId",
-      objectType: "request",
-      objectOwner: "!",
-    });
     const request = AccessRequest.create({
       action: "create",
-      objectId: "objectId",
-      objectType: "request",
-      objectOwner: "333",
+      attributes: requestAttributes,
     });
-    const access = policy.hasAccess("333", request);
-    expect(access).toBeTruthy();
+
+    //act
+    const result = policy.hasAccess(request);
+
+    //Assert
+    expect(result).toBeTruthy();
+  });
+
+  test("Returns false if the request has extra attributes", () => {
+    //Arrange
+    const policy = PolicyEntity.reconstitute({
+      id: "fakeId",
+      action: "create",
+      attributes: policyAttributes,
+    });
+    const requestAttrWithExtra = requestAttributes;
+    requestAttrWithExtra.push(
+      AccessRequestAttribute.create({ name: "attribute4", value: "attribute4" })
+    );
+
+    const request = AccessRequest.create({
+      action: "create",
+      attributes: requestAttrWithExtra,
+    });
+
+    //Act
+    const result = policy.hasAccess(request);
+
+    //Assert
+    expect(result).toBeFalsy();
+  });
+
+  test("Returns false if the actions dont match", () => {
+    //Arrange
+    const policy = PolicyEntity.reconstitute({
+      id: "fakeId",
+      action: "create",
+      attributes: policyAttributes,
+    });
+
+    const request = AccessRequest.create({
+      action: "notTheAction",
+      attributes: requestAttributes,
+    });
+
+    //Act
+    const result = policy.hasAccess(request);
+
+    //Assert
+    expect(result).toBeFalsy();
+  });
+
+  test("Returns true if the policies match even out of order",() => {
+  //Arrange
+  const policy = PolicyEntity.reconstitute({
+    id: "fakeId",
+    action: "create",
+    attributes: policyAttributes,
+  });
+  const requestAttrButShuffled = requestAttributes;
+  requestAttrButShuffled[0] = requestAttributes[2];
+  requestAttrButShuffled[2] = requestAttributes[0]
+
+  const request = AccessRequest.create({
+    action: "notTheAction",
+    attributes: requestAttrButShuffled,
+  });
+  
+  //Act
+  const result = policy.hasAccess(request);
+
+  //Assert
+  expect(request).toBeTruthy();
   });
 });

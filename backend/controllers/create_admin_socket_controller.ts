@@ -25,6 +25,7 @@ export default abstract class SocketController {
     const createAuthUserOrfailure = await createAuthenticationUser.execute(
       data
     );
+    
     if (createAuthUserOrfailure.err) {
       if (createAuthUserOrfailure.val instanceof DatabaseInsertionFailure)
         return client.emit(userEvents.createUser.response, {

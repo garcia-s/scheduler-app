@@ -6,6 +6,7 @@ export class ServiceAppointmentEntity extends Entity {
     private _date: Date;
     private _duration: Duration;
     private _clientId: string 
+    
     private constructor(params: {
         id: string;
         duration: Duration
@@ -31,6 +32,6 @@ export class ServiceAppointmentEntity extends Entity {
     }
 
     get clientId():string {
-        return this.clientId;
+        return this._clientId;
     }
 }

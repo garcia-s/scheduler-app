@@ -1,4 +1,5 @@
 
+import { UnimplementedError } from "../../../../core/errors/general";
 import Aggregate from "../../../../core/interfaces/aggregate";
 import Failure from "../../../../core/interfaces/failure";
 import { GroupEntity } from "../entities/access_control_group";
@@ -33,12 +34,6 @@ export class UserAggregate extends Aggregate {
     return new UserAggregate(params);
   }
 
-  public addGroups(groups: GroupEntity[]): void {
-    
-    this.addDomainEvent(
-      new AddedGroupsToUserEvent(this.id, this.groups)
-    );
-  }
 
   public hasAccess(request: AccessRequest): boolean {
     let hasAccess = false
@@ -48,6 +43,18 @@ export class UserAggregate extends Aggregate {
     this.addDomainEvent(new AccessRequestEvent(this.id, request));
     this.dispatchEventsForAggregate();
     return hasAccess;
+  }
+
+  public addGroups(groups: GroupEntity[]): void {
+    throw new UnimplementedError()
+    this.addDomainEvent(
+      new AddedGroupsToUserEvent(this.id, this.groups)
+    );
+  }
+
+
+  public removeGroup(groupId: string) {
+
   }
 }
 

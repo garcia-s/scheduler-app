@@ -10,7 +10,7 @@ export default abstract class UserMap {
   ): UserDTO {
     return {
       id: user.id,
-      accessControlGroups: user.root.groups.map((group) =>
+      accessControlGroups: user.groups.map((group) =>
         GroupMap.fromEntityToDTO(group)
       ),
     };

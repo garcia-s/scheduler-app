@@ -32,6 +32,8 @@ export type PolicyEntityCreationParams = {
 
 export type PolicyEntityReconstitutionParams = PolicyEntityCreationParams & {
   id: string;
+  action: string;
+  attributes: PolicyAttribute[]
 };
 
 export type PolicyEntityParams = {};
@@ -51,8 +53,14 @@ export class PolicyEntity extends Entity {
     this._attributes = params.attributes;
   }
 
-  public static create(params: PolicyEntityCreationParams): PolicyEntity {
-    return new PolicyEntity({ id: uuid(), ...params });
+  public static create(params: PolicyEntityCreationParams): Result<PolicyEntity, IPolicyEntityFailure> {
+    for(let i = 0; i < params.attributes.length ; i++) {
+      for(let j = i; j < params.attributes.length; j++) {
+        if(params.attributes[i].name === params.attributes[j].name)
+        return Err(new DuplicatedPolicyName());
+      }
+    }
+    return Ok(new PolicyEntity({ id: uuid(), ...params }));
   }
 
   public static reconstitute(params: PolicyEntityReconstitutionParams) {
@@ -72,7 +80,8 @@ export class PolicyEntity extends Entity {
   }
 
   // behavior
-  hasAccess(userId: string, request: AccessRequest): boolean {
+  hasAccess(request: AccessRequest): boolean {
+    if(request.action !== this.action) return false;
     if (request.attributes.length !== this.attributes.length) return false;
 
     for (let i = 0; i < request.attributes.length; i++) {
@@ -89,4 +98,6 @@ export class PolicyEntity extends Entity {
 }
 
 //Failures
-export abstract class IPolicyFailure extends Failure {}
+abstract class IPolicyEntityFailure extends Failure {}
+
+export class DuplicatedPolicyName extends IPolicyEntityFailure {}
