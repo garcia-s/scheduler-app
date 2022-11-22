@@ -14,7 +14,6 @@ export class WrongPreviousPassword extends Failure {}
 export class AuthenticationUserAggregate extends Aggregate {
   private _username: string;
   private _password: Password;
-  private _recoveryToken: RecoveryToken
 
   private constructor(params: {
     id: string;
