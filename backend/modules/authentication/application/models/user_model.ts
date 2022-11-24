@@ -9,10 +9,19 @@ export default class UserModel extends BaseEntity {
   username: string;
 
   @Column({type:'text'})
-  password: string
+  passwordHash: string
 
   @Column({type:'text'})
-  salt: string;
+  passwordSalt: string;
+
+  @Column({type:'integer'})
+  encryptionCycles: number;
+
+  @Column({type:'varchar', length:8, nullable: true})
+  recoveryToken?: string;
+
+  @Column({type:'timestamp', nullable: true})
+  recoveryTimestamp?: string;
   // constructor(id: string, email: string, password: string) {
   //   super();
   //   this.id = id;

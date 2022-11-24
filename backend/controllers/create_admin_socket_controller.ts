@@ -2,7 +2,7 @@ import { TransportSocketClient } from "ts-transport";
 import { UserRepository } from "../modules/access_control/application/repo_impl/user_repository_impl";
 import { CreateUser } from "../modules/access_control/application/use_cases/create_user";
 import { NewAuthenticationUserDTO } from "../modules/authentication/application/dto/new_authentication_user_dto";
-import { AuthenticationUserRepository } from "../modules/authentication/application/repo_impl/authentication_user_repository_impl";
+import { PGAuthenticationUserRepository } from "../modules/authentication/application/repo_impl/authentication_user_repository_impl";
 import {
   CreateAuthenticationUser,
   UsernameValidationFailure,
@@ -18,7 +18,7 @@ export default abstract class SocketController {
     // Call the access control to check permission
 
     const createAuthenticationUser = new CreateAuthenticationUser(
-      new AuthenticationUserRepository()
+      new PGAuthenticationUserRepository()
     );
     const createAccessUser = new CreateUser(new UserRepository());
 

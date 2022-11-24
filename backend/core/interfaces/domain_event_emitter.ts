@@ -1,14 +1,15 @@
 import Aggregate from "./aggregate";
 import { IDomainEvent } from "./domain_event";
+import { UniqueEntityID } from "./unique_entity_id";
 
 class Map<T> implements Object {
   [key: string]: T;
 }
 
-type DomainEventHandler<> = (event: IDomainEvent) => void;
+type DomainEventHandler<T extends IDomainEvent> = (event: T) => void;
 
 export class DomainEventEmitter {
-  private static handlersMap: Map<DomainEventHandler[]> = {};
+  private static handlersMap: Map<DomainEventHandler<any>[]> = {};
   private static markedAggregates: Aggregate[] = [];
 
   /**
@@ -61,11 +62,11 @@ export class DomainEventEmitter {
    */
 
   private static findMarkedAggregateByID(
-    id: string
+    id: UniqueEntityID<any>
   ): Aggregate | null {
     let found: Aggregate | null = null;
     for (let aggregate of this.markedAggregates) {
-      if (aggregate.id === id) {
+      if (aggregate.id.equals(id)) {
         found = aggregate;
       }
     }
@@ -81,7 +82,7 @@ export class DomainEventEmitter {
    * aggregate.
    */
 
-  public static dispatchEventsForAggregate(id: string): void {
+  public static dispatchEventsForAggregate(id: UniqueEntityID<any>): void {
     const aggregate = this.findMarkedAggregateByID(id);
 
     if (aggregate) {
@@ -97,14 +98,14 @@ export class DomainEventEmitter {
    * @desc Register a handler to a domain event.
    */
 
-  public static listen(
-    eventType: typeof IDomainEvent,
-    handler: DomainEventHandler
+  public static listen<T extends IDomainEvent>(
+    eventType: string,
+    handler: DomainEventHandler<T>
   ): void {
-    if (!this.handlersMap.hasOwnProperty(eventType.name)) {
-      this.handlersMap[eventType.name] = [];
+    if (!this.handlersMap.hasOwnProperty(eventType)) {
+      this.handlersMap[eventType] = [];
     }
-    this.handlersMap[eventType.name].push(handler);
+    this.handlersMap[eventType].push(handler);
   }
 
   /**

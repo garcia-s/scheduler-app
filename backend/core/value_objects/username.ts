@@ -23,6 +23,10 @@ export class Username extends ValueObject<string> {
       if(!regex.test(username)) return Err(new UsernameValidationFailure());
       return Ok(new Username(username));
     }
+
+    public static reconstitute(username: string) {
+      return new Username(username)
+    }
   
     get value(): string  {
       return this._value;

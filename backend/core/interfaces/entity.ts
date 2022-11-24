@@ -1,12 +1,13 @@
+import { UniqueEntityID } from "./unique_entity_id";
 
 export abstract class Entity {
+  protected _id: UniqueEntityID<any>;
 
-  protected constructor(id: string) {
+  protected constructor(id: UniqueEntityID<any>) {
     this._id = id;
   }
   
-  protected _id: string;
-  get id(): string {
+  get id(): UniqueEntityID<any> {
     return this._id;
   }
 

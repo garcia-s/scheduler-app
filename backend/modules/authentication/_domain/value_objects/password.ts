@@ -50,7 +50,7 @@ export class Password extends ValueObject<IPasswordParams> {
     return this._value.encryptionCycles;
   }
 
-  passwordMatch(password: string): boolean {
+  public passwordMatches(password: string): boolean {
     const hash = crypto
       .pbkdf2Sync(
         password,
@@ -60,8 +60,7 @@ export class Password extends ValueObject<IPasswordParams> {
         "sha512"
       )
       .toString("base64");
-
-    return hash === this.passwordHash;
+    return hash === this._value.passwordHash;
   }
 
   equals(object: Password): boolean {

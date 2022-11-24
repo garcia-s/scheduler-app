@@ -13,7 +13,7 @@ import {
   UserNotFound,
 } from "../repo_interfaces/authentication_user_repo";
 
-export class AuthenticationUserRepository implements IAuthenticationUserRepo {
+export class PGAuthenticationUserRepository implements IAuthenticationUserRepo {
   async save(
     user: AuthenticationUserAggregate
   ): Promise<Result<void, IAuthenticationUserRepoFailure>> {

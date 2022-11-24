@@ -34,9 +34,4 @@ export default abstract class PolicyMap {
     return policyModel;
   }
 
-  // public static fromDTOtoEntity(dto: NewPolicyDTO): PolicyEntity {
-  //   return PolicyEntity.create({
-  //     action: dto.action,
-  //   });
-  // }
 }

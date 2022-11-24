@@ -5,5 +5,7 @@ export default abstract class ValueObject<T> {
     this._value = value;
   }
 
-  abstract equals(object: ValueObject<T>): boolean;
+
+
+ 
 }

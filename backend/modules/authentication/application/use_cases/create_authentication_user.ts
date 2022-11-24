@@ -10,7 +10,7 @@ import AuthenticationUserDTO from "../dto/authentication_user_dto";
 
 
 export class CreateAuthenticationUser {
-  _repository: IAuthenticationUserRepo;
+  private _repository: IAuthenticationUserRepo;
 
   constructor(repository: IAuthenticationUserRepo) {
     this._repository = repository;
@@ -42,7 +42,7 @@ export class CreateAuthenticationUser {
       return Err(new DatabaseInsertionFailure());
     }
     return Ok(
-      AuthenticationUserMap.fromEntityToDTO(aggregate.root)
+      AuthenticationUserMap.fromEntityToDTO(aggregate)
     );
   }
 }

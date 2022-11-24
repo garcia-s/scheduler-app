@@ -1,9 +1,9 @@
 import { UnimplementedError } from "../../../../core/errors/general";
 import AggregateRoot from "../../../../core/interfaces/aggregate";
-import { GroupEntity } from "../entities/access_control_group";
 import { PolicyEntity } from "../entities/access_control_policy";
 import { AddedPolicyToGroupEvent } from "../events/added_policy_to_group_event";
 import { v4 as uuid } from "uuid";
+import { CreateGroupEvent } from "../events/created_group_event";
 
 export class GroupAggregate extends AggregateRoot {
   private _policies: PolicyEntity[];
@@ -21,9 +21,18 @@ export class GroupAggregate extends AggregateRoot {
   }
 
   public static create(name: string): GroupAggregate {
-    const instance = new GroupAggregate({ id: uuid(), name, policies: [], userIds: [] });
-    instance.addDomainEvent();                            
-    return instance; 
+    const instance = new GroupAggregate({
+      id: uuid(),
+      name,
+      policies: [],
+      userIds: [],
+    });
+    instance.addDomainEvent(new CreateGroupEvent(instance.id));
+    return instance;
+  }
+
+  get userIds(): string[] {
+    return this._userIds;
   }
 
   addPolicy(policy: PolicyEntity) {
