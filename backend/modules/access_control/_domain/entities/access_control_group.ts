@@ -36,7 +36,7 @@ export class GroupEntity extends Entity {
     this._policies.push(policy);
   }
 
-  hasAccess(userId: string, request: AccessRequest): boolean {
+  hasAccess(request: AccessRequest): boolean {
     for (let i = 0; i < this.policies.length; i++) {
       if (this.policies[i].hasAccess( request)) return true;
     }

@@ -7,8 +7,8 @@ export class UUIDEntityID extends UniqueEntityID<string> {
         super(uuid);
     }
 
-    public static create(): UUIDEntityID {
-        return new UUIDEntityID(uuid())
+    public static create(id?: string): UUIDEntityID {
+        return new UUIDEntityID(id ? id : uuid());
     }
 
     public static reconstitute(id: string) {

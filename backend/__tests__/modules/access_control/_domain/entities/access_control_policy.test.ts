@@ -1,3 +1,4 @@
+import { UUIDEntityID } from "../../../../../core/value_objects/uuid_entity_id";
 import { PolicyEntity } from "../../../../../modules/access_control/_domain/entities/access_control_policy";
 import { PolicyAttribute } from "../../../../../modules/access_control/_domain/value_objects/policy_attribute";
 import { AccessRequestAttribute } from "../../../../../modules/access_control/_domain/value_objects/request_attribute";
@@ -18,7 +19,7 @@ describe("Test for access control policy entity", () => {
   test("Returns true if the policy attributes and the access attributes match", () => {
     //Arrange
     const policy = PolicyEntity.reconstitute({
-      id: "fakeId",
+      id: UUIDEntityID.reconstitute("fakeId"),
       action: "create",
       attributes: policyAttributes,
     });
@@ -38,7 +39,7 @@ describe("Test for access control policy entity", () => {
   test("Returns false if the request has extra attributes", () => {
     //Arrange
     const policy = PolicyEntity.reconstitute({
-      id: "fakeId",
+      id:  UUIDEntityID.reconstitute("fakeId"),
       action: "create",
       attributes: policyAttributes,
     });
@@ -62,7 +63,7 @@ describe("Test for access control policy entity", () => {
   test("Returns false if the actions dont match", () => {
     //Arrange
     const policy = PolicyEntity.reconstitute({
-      id: "fakeId",
+      id:  UUIDEntityID.reconstitute("fakeId"),
       action: "create",
       attributes: policyAttributes,
     });
@@ -82,7 +83,7 @@ describe("Test for access control policy entity", () => {
   test("Returns true if the policies match even out of order",() => {
   //Arrange
   const policy = PolicyEntity.reconstitute({
-    id: "fakeId",
+    id:  UUIDEntityID.reconstitute("fakeId"),
     action: "create",
     attributes: policyAttributes,
   });

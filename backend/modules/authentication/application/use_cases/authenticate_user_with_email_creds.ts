@@ -33,15 +33,15 @@ export class AuthenticateUserWithEmailCredentials {
 
     if (
       authenticationUserOrFailure.err ||
-      !authenticationUserOrFailure.val.passwordMatch(
+      !authenticationUserOrFailure.val.authenticate(
         credentialsOrFailure.val.password
       )
     )
       return Err(new AuthCredentialsUserNotFoundFailure());
 
     return Ok(
-      AuthenticationUserMap.fromEntityToDTO(
-        authenticationUserOrFailure.val.root
+      AuthenticationUserMap.fromAggregateToDTO(
+        authenticationUserOrFailure.val
       )
     );
   }

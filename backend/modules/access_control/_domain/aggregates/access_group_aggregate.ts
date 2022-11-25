@@ -4,14 +4,14 @@ import { PolicyEntity } from "../entities/access_control_policy";
 import { AddedPolicyToGroupEvent } from "../events/added_policy_to_group_event";
 import { v4 as uuid } from "uuid";
 import { CreateGroupEvent } from "../events/created_group_event";
+import { StringEntityID } from "../../../../core/value_objects/string_entity_id";
 
 export class GroupAggregate extends AggregateRoot {
   private _policies: PolicyEntity[];
   private _userIds: string[];
 
   private constructor(params: {
-    id: string;
-    name: string;
+    id: StringEntityID;
     userIds: string[];
     policies: PolicyEntity[];
   }) {
@@ -20,10 +20,9 @@ export class GroupAggregate extends AggregateRoot {
     this._userIds = params.userIds;
   }
 
-  public static create(name: string): GroupAggregate {
+  public static create(id: StringEntityID): GroupAggregate {
     const instance = new GroupAggregate({
-      id: uuid(),
-      name,
+      id,
       policies: [],
       userIds: [],
     });

@@ -21,7 +21,7 @@ export abstract class AuthenticationUserMap {
       recoveryToken: model.recoveryToken
         ? RecoveryToken.reconstitute({
             token: model.recoveryToken,
-            timestamp: model.recoveryTimestamp?
+            timestamp: model.recoveryTimestamp!,
           })
         : undefined,
     });
@@ -43,5 +43,14 @@ export abstract class AuthenticationUserMap {
       ? user.recoveryToken.timestamp.toISOString()
       : undefined;
     return userModel;
+  }
+
+  public static fromAggregateToDTO(
+    aggregate: AuthenticationUserAggregate
+  ): AuthenticationUserDTO {
+    return {
+      id: aggregate.id.value,
+      username: aggregate.username.value,
+    };
   }
 }

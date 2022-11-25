@@ -6,6 +6,7 @@ import { userEvents } from "./socket-events";
 import { PostgresDataSource } from "./datasources";
 import CreateUserSocketController from "./controllers/create_admin_socket_controller";
 import LoginWithEmailCredentialsController from "./controllers/login_with_email_credentials_socket_controller";
+import { DomainEventEmitter } from "./core/interfaces/domain_event_emitter";
 const app = express();
 const server = createServer(app);
 

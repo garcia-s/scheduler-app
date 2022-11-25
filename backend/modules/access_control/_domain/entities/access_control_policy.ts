@@ -2,9 +2,8 @@ import { Err, Ok, Result } from "ts-results";
 import { Entity } from "../../../../core/interfaces/entity";
 import Failure from "../../../../core/interfaces/failure";
 import { AccessRequest } from "../value_objects/access_request";
-import { v4 as uuid } from "uuid";
 import { PolicyAttribute } from "../value_objects/policy_attribute";
-import { UnimplementedError } from "../../../../core/errors/general";
+import { UUIDEntityID } from "../../../../core/value_objects/uuid_entity_id";
 
 // Policies should have:
 //
@@ -15,15 +14,6 @@ import { UnimplementedError } from "../../../../core/errors/general";
 // Object: The resource being accessed by the subject.
 // And this should contain the characterstics needed to determine the resource identity.
 
-export enum ObjectOwnerSelectors {
-  any = "*",
-  self = "!",
-}
-export type ObjectOwnerID = string | ObjectOwnerSelectors;
-export enum ObjectIDSelector {
-  all = "*",
-}
-export type ObjectID = string | ObjectIDSelector;
 
 export type PolicyEntityCreationParams = {
   action: string;
@@ -31,9 +21,7 @@ export type PolicyEntityCreationParams = {
 };
 
 export type PolicyEntityReconstitutionParams = PolicyEntityCreationParams & {
-  id: string;
-  action: string;
-  attributes: PolicyAttribute[]
+  id: UUIDEntityID;
 };
 
 export type PolicyEntityParams = {};
@@ -43,7 +31,7 @@ export class PolicyEntity extends Entity {
 
   //Contructor and factories
   private constructor(params: {
-    id: string;
+    id: UUIDEntityID;
     action: string;
     attributes: PolicyAttribute[];
   }) {
@@ -60,14 +48,14 @@ export class PolicyEntity extends Entity {
         return Err(new DuplicatedPolicyName());
       }
     }
-    return Ok(new PolicyEntity({ id: uuid(), ...params }));
+    return Ok(new PolicyEntity({ id: UUIDEntityID.create(), ...params }));
   }
 
   public static reconstitute(params: PolicyEntityReconstitutionParams) {
     return new PolicyEntity(params);
   }
 
-  get id(): string {
+  get id(): UUIDEntityID {
     return this._id;
   }
   // Getters and setters
