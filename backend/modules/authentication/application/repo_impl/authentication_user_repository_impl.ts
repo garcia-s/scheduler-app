@@ -18,7 +18,7 @@ export class PGAuthenticationUserRepository implements IAuthenticationUserRepo {
     user: AuthenticationUserAggregate
   ): Promise<Result<void, IAuthenticationUserRepoFailure>> {
     try {
-      const exists = await this.getUserByUsername(user.username);
+      const exists = await this.getUserByUsername(user.username.value);
       if (exists.ok) return Err(new UsernameAlreadyInUseFailure());
       const newUser = AuthenticationUserMap.fromAggregateToModel(user);
       await newUser.save();

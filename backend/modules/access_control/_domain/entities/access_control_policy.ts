@@ -2,6 +2,7 @@ import { Err, Ok, Result } from "ts-results";
 import { Entity } from "../../../../core/interfaces/entity";
 import Failure from "../../../../core/interfaces/failure";
 import { AccessRequest } from "../value_objects/access_request";
+import { v4 as uuid } from "uuid";
 import { PolicyAttribute } from "../value_objects/policy_attribute";
 import { UUIDEntityID } from "../../../../core/value_objects/uuid_entity_id";
 

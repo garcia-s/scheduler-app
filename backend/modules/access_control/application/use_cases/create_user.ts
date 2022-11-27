@@ -6,9 +6,9 @@ import UserDTO from "../dto/user_dto";
 import NewUserDTO from "../dto/new_access_control_user_dto";
 import UserMap from "../mappers/access_control_user_map";
 import { IUserRepository } from "../repo_interfaces/user_repo";
+import { UUIDEntityID } from "../../../../core/value_objects/uuid_entity_id";
 
 export class CreateUser {
-  
   accessControlUserRepository: IUserRepository;
 
   constructor(accessControlUserRepository: IUserRepository) {
@@ -18,7 +18,10 @@ export class CreateUser {
   async execute(
     user: NewUserDTO
   ): Promise<Result<UserDTO, ICreateUserFailure>> {
-    const userAggregate = UserAggregate.create(user.id);
+    
+    const userAggregate = UserAggregate.create(
+      UUIDEntityID.reconstitute(user.id)
+    );
     const groupsOrFailure =
       await this.accessControlUserRepository.getGroupEntitiesByNames(
         user.groups

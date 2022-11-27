@@ -4,7 +4,7 @@ import { AuthCredentialsDTO } from "../modules/authentication/application/dto/au
 import { AuthenticateUserWithEmailCredentials } from "../modules/authentication/application/use_cases/authenticate_user_with_email_creds";
 import { userEvents } from "../socket-events";
 import { UserRepository } from "../modules/access_control/application/repo_impl/user_repository_impl";
-import { AuthenticationUserRepository } from "../modules/authentication/application/repo_impl/authentication_user_repository_impl";
+import { PGAuthenticationUserRepository } from "../modules/authentication/application/repo_impl/authentication_user_repository_impl";
 
 export default abstract class LoginWithEmailCredentialsController {
   public static async execute(
@@ -23,7 +23,7 @@ export default abstract class LoginWithEmailCredentialsController {
         reason: "no_valid_credentials",
       });
     const useCase = new AuthenticateUserWithEmailCredentials(
-      new AuthenticationUserRepository()
+      new PGAuthenticationUserRepository()
     );
     const authenticatedUserOrfailure = await useCase.execute(data);
 

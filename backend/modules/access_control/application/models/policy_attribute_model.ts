@@ -1,10 +1,10 @@
-import { BaseEntity, Column, Entity, ManyToOne } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import PolicyModel from "./policy_model";
 
 @Entity("access_policy_attribute")
 export default class PolicyAttributeModel extends BaseEntity {
 
-  @Column({type:"text"})
+  @PrimaryColumn({type:"text"})
   name: string;
   
   @Column({type:"text"})
